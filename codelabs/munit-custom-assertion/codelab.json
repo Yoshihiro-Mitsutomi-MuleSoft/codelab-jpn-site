@@ -1,0 +1,22 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-06-24T13:42:17Z",
+  "id": "munit-custom-assertion",
+  "duration": 13,
+  "title": "MuleSoft Unit - Run Custom Assertion",
+  "authors": "Dejim Juan, Yoshihiro Mitsutomi",
+  "summary": "This guide provides an overview of the features of MUnit to run a custom assertion using the ‘Run Custom' operation.",
+  "source": "1PbWYtFpxYMv3k_h8qOjVp-LDqzLm_xdZwQJKdClrAKc",
+  "theme": "munit",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "MUnit"
+  ],
+  "tags": [],
+  "url": "munit-custom-assertion"
+}
