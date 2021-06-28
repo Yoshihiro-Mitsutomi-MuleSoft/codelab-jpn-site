@@ -3,11 +3,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="MuleSoft Anypoint Platform を利用したハンズオンラボのリソースセンターです。本製品をご利用いただく上での各種実践的な技法をハンズオン形式で学習いただくためのコンテンツを取り揃えております。ハンズオンコンテンツによっては、ハンズオンを通じて小規模な API/Application を実際に構築いただきます。">
+<meta name="description" content="In this workshop, we will look at using the Anypoint Platform to incrementally deliver the application network through API Led Connectivity. We will learn how to design and implement APIs that a mobile application will use for submitting orders and checking order status, which underneath the covers, will connect to and orchestrate a variety of enterprise systems including legacy order processing databases, ERP applications, messaging queues, SaaS and cloud applications.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="generator" content="MuleSoft ラボリソースセンター">
-<meta name="application-name" content="MuleSoft ラボリソースセンター">
-<link rel="canonical" href="https://www.mulesoft.com/example/">
+<meta name="generator" content="MuleSoft API-led Connectivity Workshop">
+<meta name="application-name" content="MuleSoft API-led Connectivity Workshop">
+<link rel="canonical" href="https://www.mulesoft.com/alc/">
 <link rel="preconnect" href="https://www.google-analytics.com">
 <script>
 window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -15,14 +15,14 @@ window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
     ga('send', 'pageview');
 </script>
 <script async src="https://www.google-analytics.com/analytics.js"></script>
-<title>MuleSoft ラボリソースセンター</title>
+<title>MuleSoft API-led Connectivity Workshop</title>
 <link rel="stylesheet" href="/styles/main.css">
 <link rel="import" href="/elements/elements.html">
 <style is="custom-style">
 :root{--paper-tabs-selection-bar-color:currentcolor;--paper-input-container-underline:{display:none};--paper-input-container-underline-focus:{display:none};}.dropdown-filter{--paper-input-container:{padding:8px}} </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#455a64">
-<meta name="apple-mobile-web-app-title" content="MuleSoft ラボリソースセンター">
+<meta name="apple-mobile-web-app-title" content="MuleSoft API-led Connectivity Workshop">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="194x194" href="/images/favicons/favicon-194x194.png">
@@ -34,9 +34,9 @@ window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
 <meta name="theme-color" content="#455a64">
 <meta name="og:type" property="og:type" content="website">
-<meta name="og:title" property="og:title" content="MuleSoft ラボリソースセンター">
-<meta name="og:description" property="og:description" content="MuleSoft Anypoint Platform を利用したハンズオンラボのリソースセンターです。本製品をご利用いただく上での各種実践的な技法をハンズオン形式で学習いただくためのコンテンツを取り揃えております。ハンズオンコンテンツによっては、ハンズオンを通じて小規模な API/Application を実際に構築いただきます。">
-<meta name="og:url" property="og:url" content="https://www.mulesoft.com/example/">
+<meta name="og:title" property="og:title" content="MuleSoft API-led Connectivity Workshop">
+<meta name="og:description" property="og:description" content="In this workshop, we will look at using the Anypoint Platform to incrementally deliver the application network through API Led Connectivity. We will learn how to design and implement APIs that a mobile application will use for submitting orders and checking order status, which underneath the covers, will connect to and orchestrate a variety of enterprise systems including legacy order processing databases, ERP applications, messaging queues, SaaS and cloud applications.">
+<meta name="og:url" property="og:url" content="https://www.mulesoft.com/alc/">
 <meta name="og:site_name" property="og:site_name" content="Codelabs">
 <meta name="og:determiner" property="og:determiner" content="the">
 <meta name="og:locale" property="og:locale" content="en_US">
@@ -47,10 +47,10 @@ window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 <meta name="og:image:height" property="og:image:height" content="1200">
 <meta name="og:image:alt" property="og:image:alt" content="Codelabs">
 <meta name="twitter:card" property="twitter:card" content="summary_large_image">
-<meta name="twitter:title" property="twitter:title" content="MuleSoft ラボリソースセンター">
-<meta name="twitter:description" property="twitter:description" content="MuleSoft Anypoint Platform を利用したハンズオンラボのリソースセンターです。本製品をご利用いただく上での各種実践的な技法をハンズオン形式で学習いただくためのコンテンツを取り揃えております。ハンズオンコンテンツによっては、ハンズオンを通じて小規模な API/Application を実際に構築いただきます。">
+<meta name="twitter:title" property="twitter:title" content="MuleSoft API-led Connectivity Workshop">
+<meta name="twitter:description" property="twitter:description" content="In this workshop, we will look at using the Anypoint Platform to incrementally deliver the application network through API Led Connectivity. We will learn how to design and implement APIs that a mobile application will use for submitting orders and checking order status, which underneath the covers, will connect to and orchestrate a variety of enterprise systems including legacy order processing databases, ERP applications, messaging queues, SaaS and cloud applications.">
 <meta name="twitter:image" property="twitter:image" content="/images/og-image.png">
-<meta name="twitter:url" property="twitter:url" content="https://www.mulesoft.com/example/">
+<meta name="twitter:url" property="twitter:url" content="https://www.mulesoft.com/alc/">
 </head>
 <body id="app" is="body-bind" class="loading fullbleed view">
 <paper-header-panel id="main" mode="standard" main>
@@ -73,8 +73,8 @@ window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 <div class="banner-description">
 <img id="logo" src="/images/logo.png" alt="Event logo">
 <div class="banner-meta">
-<h3>MuleSoft ラボリソースセンター</h3>
-<p>MuleSoft Anypoint Platform を利用したハンズオンラボのリソースセンターです。本製品をご利用いただく上での各種実践的な技法をハンズオン形式で学習いただくためのコンテンツを取り揃えております。ハンズオンコンテンツによっては、ハンズオンを通じて小規模な API/Application を実際に構築いただきます。</p>
+<h3>MuleSoft API-led Connectivity Workshop</h3>
+<p>In this workshop, we will look at using the Anypoint Platform to incrementally deliver the application network through API Led Connectivity. We will learn how to design and implement APIs that a mobile application will use for submitting orders and checking order status, which underneath the covers, will connect to and orchestrate a variety of enterprise systems including legacy order processing databases, ERP applications, messaging queues, SaaS and cloud applications.</p>
 </div>
 </div>
 </div>
@@ -90,28 +90,6 @@ window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 </div>
 </div>
 <card-sorter id="cards" class="site-width">
-<a href="/codelabs/munit-custom-assertion/index.html?index=..%2F..example" on-tap="navigate" class="codelab-card category-munit" data-category="MUnit" data-title="MuleSoft Unit - Run Custom Assertion" data-duration="13" data-updated="2021-06-24T13:42:17Z" data-tags="" data-pin="">
-<div class="description">MuleSoft Unit - Run Custom Assertion</div>
-<div class="card-duration">
-<span>13 min </span>
-<span>Updated Jun 24, 2021</span>
-</div>
-<div class="card-footer">
-<div class="category-icon munit-icon"></div>
-<paper-button class="munit-bg">Start</paper-button>
-</div>
-</a>
-<a href="/codelabs/munit-test-recorder/index.html?index=..%2F..example" on-tap="navigate" class="codelab-card category-munit" data-category="MUnit" data-title="MuleSoft MUnit - Generate Test Suite with Test Recorder" data-duration="11" data-updated="2021-06-27T11:50:04Z" data-tags="munit,web" data-pin="">
-<div class="description">MuleSoft MUnit - Generate Test Suite with Test Recorder</div>
-<div class="card-duration">
-<span>11 min </span>
-<span>Updated Jun 27, 2021</span>
-</div>
-<div class="card-footer">
-<div class="category-icon munit-icon"></div>
-<paper-button class="munit-bg">Start</paper-button>
-</div>
-</a>
 </card-sorter>
 <div id="loading-placeholder" class="site-width">
 Loading Codelabs, please wait...
