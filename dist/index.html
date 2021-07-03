@@ -93,7 +93,12 @@ MuleSoft Anypoint Platform を利用したハンズオンラボのリソース�
 </a>
 </paper-listbox>
 </paper-dropdown-menu>
-</div>
+<paper-dropdown-menu label="Filter by category" class="dropdown-filter" no-label-float noink no-animations>
+<paper-listbox id="categorylist" slot="dropdown-content" class="dropdown-content" on-iron-activate="onCategoryActivate" attr-for-selected="filter">
+<paper-item filter="MUnit">MUnit</paper-item>
+<paper-item filter="tableau">tableau</paper-item>
+</paper-listbox>
+</paper-dropdown-menu></div>
 <card-sorter id="cards" class="site-width">
 <a href="/codelabs/munit-custom-assertion/index.html?index=..%2F..index" on-tap="navigate" class="codelab-card category-munit" data-category="MUnit" data-title="MuleSoft MUnit - Run Custom Assertion" data-duration="12" data-updated="2021-06-28T09:44:37Z" data-tags="" data-pin="">
 <div class="description">MuleSoft MUnit - Run Custom Assertion</div>
@@ -106,11 +111,22 @@ MuleSoft Anypoint Platform を利用したハンズオンラボのリソース�
 <paper-button class="munit-bg">Start</paper-button>
 </div>
 </a>
-<a href="/codelabs/munit-spy-verify/index.html?index=..%2F..index" on-tap="navigate" class="codelab-card category-munit" data-category="MUnit" data-title="MuleSoft MUnit - Spy and Verify" data-duration="12" data-updated="2021-06-28T09:46:12Z" data-tags="" data-pin="">
+<a href="/codelabs/munit-mocking/index.html?index=..%2F..index" on-tap="navigate" class="codelab-card category-munit" data-category="MUnit" data-title="MuleSoft MUnit - Using the Mock When Processor" data-duration="8" data-updated="2021-06-28T13:39:59Z" data-tags="munit,web" data-pin="">
+<div class="description">MuleSoft MUnit - Using the Mock When Processor</div>
+<div class="card-duration">
+<span>8 min </span>
+<span>Updated Jun 28, 2021</span>
+</div>
+<div class="card-footer">
+<div class="category-icon munit-icon"></div>
+<paper-button class="munit-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/munit-spy-verify/index.html?index=..%2F..index" on-tap="navigate" class="codelab-card category-munit" data-category="MUnit" data-title="MuleSoft MUnit - Spy and Verify" data-duration="12" data-updated="2021-07-03T10:36:28Z" data-tags="munit,web" data-pin="">
 <div class="description">MuleSoft MUnit - Spy and Verify</div>
 <div class="card-duration">
 <span>12 min </span>
-<span>Updated Jun 28, 2021</span>
+<span>Updated Jul 3, 2021</span>
 </div>
 <div class="card-footer">
 <div class="category-icon munit-icon"></div>
@@ -126,6 +142,17 @@ MuleSoft Anypoint Platform を利用したハンズオンラボのリソース�
 <div class="card-footer">
 <div class="category-icon munit-icon"></div>
 <paper-button class="munit-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/tableau-analytics-extension-mulesoft/index.html?index=..%2F..index" on-tap="navigate" class="codelab-card category-tableau" data-category="tableau" data-title="MuleSoft で開発する Tableau Analytics Extension" data-duration="11" data-updated="2021-07-03T10:35:44Z" data-tags="munit,web" data-pin="">
+<div class="description">MuleSoft で開発する Tableau Analytics Extension</div>
+<div class="card-duration">
+<span>11 min </span>
+<span>Updated Jul 3, 2021</span>
+</div>
+<div class="card-footer">
+<div class="category-icon tableau-icon"></div>
+<paper-button class="tableau-bg">Start</paper-button>
 </div>
 </a>
 </card-sorter>

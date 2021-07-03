@@ -1,0 +1,317 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>MuleSoft で開発する Tableau Analytics Extension</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="tableau-analytics-extension-mulesoft"
+                  title="MuleSoft で開発する Tableau Analytics Extension"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Introduction" duration="0">
+        <p><strong>Last Updated:</strong> 2021-07-03</p>
+<h2 is-upgraded><strong>Overview</strong></h2>
+<p>Tableau はダッシュボードやレポート上で各種計算を行います。同製品と連携可能な <a href="https://tableau.github.io/analytics-extensions-api/#" target="_blank">Analytics Extensions</a> を使うことで動的に外部サービスを使った演算処理も行えます。Analytic Extensions は Tableau からリアルタイムに受け取ったデータを外部サービスと連携させ各種変換処理等を行わせます。Tableau はこの戻りデータをダッシュボードやレポートへ反映させます。</p>
+<p>通常この Analytics Extensions は Node.js や Python 等のカスタムコードで組み上げられますが、MuleSoft を使うことでより迅速に幾多もの外部サービスとの連携が可能となります。MuleSoft で Analytics Extension を開発を短期間で開発して、MuleSoft の Application Network に Tableau を組み入れます。これにより、MuleSoft が提供する各種コネクタを使って Salesforce, SAP, ServiceNow をはじめとする各種データソースと Tableau を容易に連携できるようになります。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/c07f3cb23b4c5b.png"></p>
+<h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
+<p>本 CodeLab においては、Tableau の Analytics Extension として稼働する MuleSoft API を弊社が提供するテンプレートから作成します。今回は通貨換算を行うテンプレートと利用します。</p>
+<h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
+<ul class="checklist">
+<li>MuleSoft を使った Tableau Analytics Extension 実装</li>
+</ul>
+<h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
+<ul>
+<li>Anypoint Studio 7.7.0 or later</li>
+<li>Mule Runtime Engine 4.3.0 or later</li>
+<li><a href="https://github.com/djuang1/tableau-analytics-extension-example-mule4" target="_blank">Tableau Analytics Extension Template</a></li>
+<li>Tableau Desktop(14 日間のトライアル版あり)</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="テンプレートの取り込み" duration="2">
+        <h2 is-upgraded><strong>テンプレートのダウンロード</strong></h2>
+<p><a href="https://github.com/djuang1/tableau-analytics-extension-example-mule4" target="_blank">GitHub レポジトリページ</a>にアクセスします。</p>
+<p><strong>Code &gt; Download</strong> ZIP を選択し、Zip ファイルとしてローカルへダウンロードします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/70c5c1cb38adc9ea.png"></p>
+<p>ダウンロードした Zip ファイルを解凍します。</p>
+<h2 is-upgraded><strong>テンプレートを Anypoint Studio へ取り込み</strong></h2>
+<p>Anypoint Studio を起動します。</p>
+<p><strong>File</strong> メニューから <strong>Import</strong> を選択します。</p>
+<p class="image-container"><img style="width: 568.00px" src="img/b40d6bb686f1585a.png"></p>
+<p><strong>Anypoit Studio from File System</strong> を選択の上、<strong>Next</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 595.00px" src="img/5ce124082e056236.png"></p>
+<p><strong>Project Root</strong> 欄にて先の手順で解凍したフォルダを選択します。</p>
+<p><strong>Finish</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 594.00px" src="img/a0eb0bed3d5c130.png"></p>
+<p>ダウンロードしたテンプレートから Mule Project が生成され、<strong>tableau-analytics-extensions-api.xml</strong> が自動で開かれます。（開かれない場合は <strong>Package Explorer</strong> から選択の上、開いてください。）</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a7de4f2e4672cbdc.png"></p>
+<aside class="special"><p><strong>Note:</strong> Tableau Analytics Extensions API は<a href="https://tableau.github.io/analytics-extensions-api/docs/ae_api_ref.html" target="_blank">こちら</a>の API 仕様をもとに実装する必要があります。本 API 仕様では２つのメソッドが定義されており、次ステップ以降でこれらに従った処理実装を行います。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="GET /info の実装" duration="1">
+        <h2 is-upgraded>はじめに</h2>
+<p>本メソッドは Analytics Extension が実装された Server に関する情報をレスポンスとして返します。</p>
+<aside class="special"><p><strong>API 仕様に記載された</strong><a href="https://tableau.github.io/analytics-extensions-api/docs/ae_api_ref.html#get-info" target="_blank"><strong>メソッド定義</strong></a><strong>(2021/07/03 時点): </strong></p>
+<p>Get static information about the server. This is used for Tableau to understand how the analytics extension is configured. It returns data about the service, such as whether authentication is required. It helps Tableau understand what&#39;s sitting on the other side and what Tableau should be passing.</p>
+</aside>
+<h2 is-upgraded><strong>レスポンスデータの設定</strong></h2>
+<p><strong>Get:\info:tableau-analytics-extensions-api-config</strong> flow の位置までスクロールします。</p>
+<p class="image-container"><img style="width: 431.00px" src="img/663d924984fbf9d7.png"></p>
+<p><strong>Transform Message</strong> コンポーネントを選択します。</p>
+<p>レスポンスデータを確認します。実運用においては、 state_path を attributes.header.host 等、実際のデータに置き換えて利用します。</p>
+<p>本ハンズオンではテンプレートで構成されたデータをそのまま利用します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/91d6d28004e66a0.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="POST /evaluate の実装" duration="2">
+        <h2 is-upgraded><strong>はじめに</strong></h2>
+<p>本メソッドでは Tableau より渡される引数を元に Analytics Extension が実際に行う適切な処理を実装します。引数は HTTP Body の data として渡されます。実際に行う処理は HTTP body の script で渡される内容で切り替えます。</p>
+<aside class="special"><p><strong>API 仕様に記載された</strong><a href="https://tableau.github.io/analytics-extensions-api/docs/ae_api_ref.html#post-evaluate" target="_blank"><strong>メソッド定義</strong></a><strong>(2021/07/03 時点): </strong></p>
+<p>Executes a block of code, replacing named parameters with their provided values. The Evaluate endpoint is where all of the analysis using the service is done.</p>
+<p>The expected POST body is a JSON dictionary with two elements:</p>
+<ul>
+<li><strong>data</strong>: a value that contains the parameter values passed to the code. These values are key-value pairs, following a specific convention for key names (_arg1, _arg2, etc.). These take dimensions and measures from Tableau and pass them to the external service.</li>
+<li><strong>script</strong>: a value that contains one or more lines of code or instructions for the analytics extension. Any references to the data or parameter names will be replaced by their values according to data. It defines the instructions about what the external service should execute. For example, a Python script, the name of a remote process or function, a script in another language, or it could be empty if the service just performs a single function.</li>
+</ul>
+</aside>
+<p>本ハンズオンでは、script に「currency」が指定された場合に、3rd Party API を利用した通貨換算処理を MuleSoft に実装します。</p>
+<p>もし MuleSoft を使わない場合、例えば Node.js であれば下記のようなコード実装が最低限必要となります。（）しかしここでは、コード記述は最小化し、可読性が高く尚且つ属人性を排除するローコードベースの開発を行います。</p>
+<pre><code>// -------------------- CURRENCY CONVERSION --------------------
+exports.convert = async (data, callback) =&gt; {
+  let from = data._arg2[0];
+  let to = data._arg3[0];
+  let url = `https://openexchangerates.org/api/latest.json?symbols=${from},${to}&amp;app_id=${process.env.CURRENCY_KEY}`;
+
+  // Get the exchange rate and convert
+  const response = await fetch(url);
+  const body = await response.json();
+  if (body.error) return callback([0], null);
+  let rate = body.rates[to] / body.rates[from];
+  let output = data._arg1.map(money =&gt; money * rate);
+  callback(null, output);
+};</code></pre>
+<h2 is-upgraded><strong>実装する処理の確認</strong></h2>
+<p>本ハンズオンでは下表のかたちでリクエストを受け取り、通貨換算結果を返す Tableau Analytics Extension を実装します。</p>
+<table>
+<tr><td colspan="2" rowspan="1"><p><strong>Script</strong></p>
+</td><td colspan="1" rowspan="1"><p>「currency」を固定値で指定</p>
+</td></tr>
+<tr><td colspan="1" rowspan="3"><p><strong>Data</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>_arg1</strong></p>
+</td><td colspan="1" rowspan="1"><p>通貨換算対象の金額を指定</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>_arg2</strong></p>
+</td><td colspan="1" rowspan="1"><p>通貨換算前の通貨を指定(3 文字の通貨コード、例 USD)</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>_arg3</strong></p>
+</td><td colspan="1" rowspan="1"><p>通貨換算後の通貨を指定(3 文字の通貨コード、例 JPY)</p>
+</td></tr>
+</table>
+<p>リクエストの例：</p>
+<pre><code>POST /evaluate HTTP/1.1
+Host: localhost:8081
+Authorization: Basic dGVzdDp0ZXN0
+Accept: */*
+Accept-Encoding: gzip, deflate
+User-Agent: Tableau Desktop 20201.20.0721.1350; pro; libcurl-client; 64-bit; en_US; Mac OS X 10.15.7;
+TabPy-Client: Tableau Desktop Pro2020.1
+Content-Type: application/json
+Connection: Keep-Alive
+Content-Length: 80
+
+{&#34;script&#34;:&#34;currency&#34;,&#34;data&#34;:{&#34;_arg1&#34;:[56756.0],&#34;_arg2&#34;:[&#34;GBP&#34;],&#34;_arg3&#34;:[&#34;USD&#34;]}}</code></pre>
+<p>レスポンスの例：</p>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+Content-Length: 41
+Date: Thu, 14 Jan 2021 17:54:31 GMT
+
+[
+  77694.09149274612391958450717721687
+]</code></pre>
+<h2 is-upgraded><strong>Dummy /eval の実装</strong></h2>
+<p><a href="https://tableau.github.io/analytics-extensions-api/docs/ae_known_issues.html#dummy-eval-call-is-made-when-authentication-is-enabled-in-tableau" target="_blank">Tableau 側の既知の問題</a>として dummy の POST /eval の実装を必要としています。本 Dummy Call においては下記がリクエストとしと渡されます。</p>
+<pre><code>{‘script&#39;: ‘return int(1)&#39;, ‘data&#39;: {‘_arg1&#39;: [4]}}</code></pre>
+<p>この際、実装側は「1」を戻します。</p>
+<p><strong>Post:\evaluate:application\json:tableau-analytics-extensions-api-config</strong> flow までスクロールします。</p>
+<p><strong>Choice</strong> ルーターの最初の条件式を確認し、「returun int(1)」が script に指定された場合に、中の処理が評価されることを確認します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/8758863e05226167.png"></p>
+<p>この中にある <strong>Transform Message</strong> を確認し、「1」が戻されるよう構成されていることを確認します。</p>
+<p class="image-container"><img style="width: 477.00px" src="img/dffa59ec93ad1358.png"></p>
+<h2 is-upgraded><strong>通貨換算処理の実装</strong></h2>
+<p>次の条件式を確認します。</p>
+<p>ここでは、script に「currency」が指定された場合に中の処理が評価されます。</p>
+<p>つまり上記で定義したリクエストがきた場合の通貨換算の処理はここで実装します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/19b2801be6e6aab5.png"></p>
+<p>通貨換算は、<a href="https://openexchangerates.org/" target="_blank">Open Exchange Rates</a> という外部サービスを利用し最新の変換レートを使って計算します。</p>
+<p><strong>Request</strong> を選択し、<strong>Mule Property</strong> Window を開きます。</p>
+<p>本コンポーネントにて <a href="https://docs.openexchangerates.org/docs/latest-json" target="_blank">Open Exchange Rates の GET /latest.json メソッド</a>を呼び出し、最新の通貨レートを取得します。</p>
+<p><strong>Query Parameters</strong> タブを選択します。</p>
+<p>本メソッドでは <strong>symbols</strong> クエリパラメータで渡された通貨の最新レートを返します。また、本 API を利用するための ID も <strong>app_id </strong>クエリパラメータで渡します。ここでは、<strong>src/main/resources</strong> 配下の構成ファイル（<strong>config.dev.yaml</strong>）に指定された currency/app_id を利用します。（app_id は次ステップで取得します。）</p>
+<p class="image-container"><img style="width: 624.00px" src="img/b04cf20c9407b58e.png"></p>
+<p>Transform Message コンポーネントを選択します。</p>
+<p>本コンポーネントにて、Open Exchange Rates より戻された結果をもとに通貨換算演算を行います。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/af2457a1bfd32ffd.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Mule Project のテスト実行" duration="3">
+        <h2 is-upgraded><strong>Open Exchange Rate の App ID を取得</strong></h2>
+<p>Open Exchange Rate API の利用で求められる App ID を取得します。</p>
+<aside class="warning"><p>Open Exchange Rate API は月 1,000 call まで無料で利用できる Free Plan を用意しています。(2021/07/03 時点) 本ハンズオンではこの Free Plan に Sign Up して API を利用しますが、利用に際してはご自身の判断と責任おいてお願いします。</p>
+</aside>
+<p><a href="https://openexchangerates.org/signup/free" target="_blank">https://openexchangerates.org/signup/free</a> にアクセスし、必要事項を入力の上 Open Exchange Rates の Free Plan に Sign Up します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/2faf61ab11b452d2.png"></p>
+<p>Sign Up ができましたら、<strong>App IDs</strong> ページを開き、App ID をコピーします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/765922bc28e0195e.png"></p>
+<h2 is-upgraded><strong>App ID を構成ファイルに設定</strong></h2>
+<p>Anypoint Studio に戻り、<strong>Package Explorer</strong> にて <strong>src/main/resources</strong> フォルダを開きます。</p>
+<p>同フォルダ配下にある <strong>config.dev.yaml</strong> を開きます。</p>
+<p><strong>app_id</strong> エントリを先の手順でコピーした Open Exchange Rates の APP ID に置き換えます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/1cd989017e6c50d2.png"></p>
+<h2 is-upgraded><strong>Mule API をテスト実行</strong></h2>
+<p><strong>tableau-analytics-extensions-api</strong> タブをクリックします。</p>
+<p>右クリックから <strong>Run project tableau-analytics-extensions-api</strong> を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e26328bed5cca708.png"></p>
+<p><strong>Console</strong> タブに <strong>Deployed</strong> が表示されることを確認します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/60d0fdb1493d7e3f.png"></p>
+<p>ブラウザを開き <a href="http://localhost:8081/api/console" target="_blank">http://localhost:8081/api/console</a> へアクセスします。</p>
+<p><strong>POST</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e21b7569726a11ea.png"></p>
+<p><strong>Body</strong> 欄の中身を確認します。</p>
+<p>ここでは、API 仕様に定義された例値が自動でセットされています。</p>
+<p>本例では、12.99 USD を CAD に変換します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/569050f75e13b173.png"></p>
+<p>スクロールダウンして、<strong>Send</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e0f8f48f59812bab.png"></p>
+<p>結果が返ってくることを確認します。（結果は実行時のレートに依存するため下図と同じにはなりません。）</p>
+<p class="image-container"><img style="width: 624.00px" src="img/244227972873e8ad.png"></p>
+<p>必要に応じて別のバリエーションでもテストしてみます。</p>
+<p>下図の例では 10 USD を日本円に換算しています。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a1682097b3d80bcc.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tableau Desktop の設定" duration="3">
+        <aside class="warning"><p>本手順書にでは Tableau Desktop 2020.3 を使ったスクリーンショットを掲載しています。バージョンによってはイメージが異なる可能性があることご承知置き願います。</p>
+</aside>
+<h2 is-upgraded><strong>Tableau Analytic Extension の構成</strong></h2>
+<p>Tableau Desktop を起動します。</p>
+<p><strong>ファイル &gt; 新規</strong> を選択し、新規のワークブックを作成します。</p>
+<p class="image-container"><img style="width: 446.21px" src="img/b4df613f0f6f307c.png"></p>
+<p><strong>ヘルプ &gt; 設定とパフォーマンス &gt; 分析の拡張機能接続の管理...</strong> を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/46701df63714837.png"></p>
+<p>下記項目を設定の上、<strong>テスト接続</strong>ボタンを押下します。</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>分析の拡張機能の選択</p>
+</td><td colspan="1" rowspan="1"><p>TabPy/External API</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>サーバー</p>
+</td><td colspan="1" rowspan="1"><p>localhost</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>ポート</p>
+</td><td colspan="1" rowspan="1"><p>8081</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>ユーザ名</p>
+</td><td colspan="1" rowspan="1"><p>test</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>パスワード</p>
+</td><td colspan="1" rowspan="1"><p>test</p>
+</td></tr>
+</table>
+<p class="image-container"><img style="width: 624.00px" src="img/59d903fb1147ebc.png"></p>
+<p>構成に問題がない場合は、下図のようなウィンドウが返ってきます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/bffe0b8b03064c19.png"></p>
+<p><strong>OK</strong> ボタンを押下します。</p>
+<h2 is-upgraded><strong>サンプルデータを Tableau に登録</strong></h2>
+<p>下記コードをコピーし、任意の名前で保存します。(例：sampleTableau.json）</p>
+<pre><code>{
+        &#34;test&#34;:[
+                {&#34;Currency&#34;: &#34;THB&#34;,
+                &#34;Balance&#34;: 100},
+                {&#34;Currency&#34;: &#34;USD&#34;,
+                &#34;Balance&#34;: 100},
+                {&#34;Currency&#34;: &#34;EUR&#34;,
+                &#34;Balance&#34;: 100}
+                ]
+}</code></pre>
+<p><strong>データに接続</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 461.86px" src="img/c53bebeb787fdfc.png"></p>
+<p><strong>JSON ファイル</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/9d456d1ab00b6d76.png"></p>
+<p>上記で作成したファイルを選択します。</p>
+<p>全てチェックの上、<strong>OK</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/b0db4b6f7806209b.png"></p>
+<h2 is-upgraded><strong>Tableau Analytic Extension を計算フィールドに構成</strong></h2>
+<p><strong>メジャーネーム</strong>欄にて右クリックから<strong>計算フィールドの作成...</strong> を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/6bbaf6fd84666e49.png"></p>
+<p><strong>Currency Calc</strong> と命名し、下記コードを入力の上、<strong>OK</strong> ボタンを押下します。</p>
+<pre><code>SCRIPT_REAL(&#34;currency&#34;,ATTR([Balance]),ATTR([Currency]),&#34;JPY&#34; )</code></pre>
+<p class="image-container"><img style="width: 624.00px" src="img/93c500aeec7ee99b.png"></p>
+<h2 is-upgraded><strong>Tableau Analytic Extension をワークシートに反映</strong></h2>
+<p><strong>行</strong>欄に Currency, Balance, Currency Calc をドラッグランドドロップします。</p>
+<p>その後、表を選択することで下図のようにサンプルにリストしたパターンで API が呼ばれ、各通貨に応じた換算を行います。</p>
+<p class="image-container"><img style="width: 442.74px" src="img/a5e70d158052949d.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/56586d1763930b8b.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="まとめ" duration="0">
+        <p>本 CodeLab ハンズオンにおいては、Tableau Analytics Extension を MuleSoft API で実装する方法を体験しました。</p>
+<p>本例では、3rd Party API を使った API を開発しましたが、Tableau が直接アクセスできないデータソースや、特殊な加工が必要なデータがあれば、MuleSoft を介在させて補助することができます。また、条件ごとに利用するデータソースが異なるといったシナリオにも対応ができます。</p>
+<p>これらの API は Tableau のために全て新規開発するのではなく、他目的で既に MuleSoft API が運用されていればそれらの活用も検討します。</p>
+<h2 is-upgraded><strong>What&#39;s next?</strong></h2>
+<p>Check out some of these codelabs...</p>
+<ul>
+<li>TBD</li>
+</ul>
+<h2 is-upgraded><strong>Reference docs</strong></h2>
+<ul>
+<li><a href="https://tableau.github.io/analytics-extensions-api/" target="_blank">Tableau Analytics Extensions API Documentation</a></li>
+<li><a href="https://github.com/djuang1/tableau-analytics-extension-example-mule4" target="_blank">Analytics Extension Template</a></li>
+<li><a href="https://github.com/djuang1/tableau-analytics-extensions-api" target="_blank">RAML and OAS 2.0 specifications for the Tableau Analytics Extensions API</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

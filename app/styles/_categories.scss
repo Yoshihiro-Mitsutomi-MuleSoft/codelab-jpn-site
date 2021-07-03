@@ -83,3 +83,6 @@ $color-google-green, 'mongodb.svg');
 
 @include codelab-card(['snowflake'],
   $color-google-blue, 'snowflake.svg');
+
+@include codelab-card(['tableau'],
+  $color-google-blue, 'tableau.png');
