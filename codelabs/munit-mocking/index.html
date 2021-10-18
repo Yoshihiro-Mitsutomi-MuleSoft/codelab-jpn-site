@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
-  <title>MuleSoft MUnit - Using the Mock When Processor</title>
+  <title>MuleSoft MUnit - モッキング</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
@@ -23,100 +23,106 @@
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
   <google-codelab codelab-gaid="UA-172158109-1"
                   id="munit-mocking"
-                  title="MuleSoft MUnit - Using the Mock When Processor"
+                  title="MuleSoft MUnit - モッキング"
                   environment="web"
                   feedback-link="https://github.com/djuang1/mulesoft-codelabs/issues">
     
       <google-codelab-step label="Introduction" duration="0">
-        <p><strong>Last Updated:</strong> 2020-07-07</p>
+        <p><strong>Last Updated:</strong> 2021-10-18</p>
 <h2 is-upgraded><strong>Overview</strong></h2>
-<p>This guide provides an overview of setting up a MUnit test against a Web Server Consumer component in Mule 4.x. We&#39;ll use a publicly available <a href="http://www.dneonline.com/calculator.asmx" target="_blank">endpoint</a> that exposes a Calculator service for the implementation. Around that, we&#39;ll create a test suite that shows how to mock the Web Service response. </p>
-<p>When you use the ‘Mock when&#39; processor, it allows you simulate an endpoint. When you setup the validation using an ‘Assert that&#39; processor, you can test against the mocked data to ensure the transformations are correct.</p>
+<p>このガイドでは、Mule 4.x の Web Server Consumer コンポーネントに対して MUnit 2.3 のテストを設定する方法を説明します。その上で、Web サービスのレスポンスをモックするテストスイートを作成します。</p>
 <h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
-<p>In this codelab, you&#39;re going to build simple MUnit test against a SOAP endpoint that is being called using the Web Service Consumer component.<br></p>
-<p class="image-container"><img style="width: 322.50px" src="img/d91c00d3208e81ea.png"></p>
-<aside class="warning"><p><strong>Note:</strong>If you&#39;d like, you can use your own SOAP endpoint but you&#39;ll need to replace the XML in the output.xml file with the expected response from your API as well as the Transform Message processors</p>
+<p>本 CodeLab においては、簡単な SOAP Consumer API を作成します。この API に対して Mocking 機能を利用した MUnit Test Suite を開発します。</p>
+<p class="image-container"><img style="width: 366.26px" src="img/d91c00d3208e81ea.png"></p>
+<aside class="warning"><p><strong>Note:</strong> 必要に応じて、独自のSOAPエンドポイントを使用することができますが、output.xmlファイル（ステップ5.5）のXMLを、APIからの期待されるレスポンスに置き換えるとともに、Transform Messageプロセッサ（ステップ3.5および3.6）を使用する必要があります。</p>
 </aside>
 <h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
-<li>How to set a MUnit test suite to mock a SOAP response</li>
+<li>MUnit Test Suite の作成方法</li>
+<li>Mocking 機能を利用したスタブの自動生成</li>
 </ul>
 <h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
 <ul>
-<li>Anypoint Studio 7.5.x</li>
-<li>MUnit 2.2.5</li>
-<li>Mule EE 4.3.0</li>
+<li>Anypoint Studio 7.5.0 or later</li>
 <li>Example SOAP Web Service - <a href="http://www.dneonline.com/calculator.asmx?wsdl" target="_blank">Link</a></li>
+<li>MUnit 2.3 or later</li>
+<li>MUnit Anypoint Studio Plugin 2.5.0 or later</li>
+<li>Mule Runtime Engine 4.3.0 or later</li>
 </ul>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Setup HTTP Connector" duration="1">
-        <h2 is-upgraded><strong>Create a new project</strong></h2>
-<p>Open Anypoint Studio and create a new <strong>Mule Project</strong></p>
-<p class="image-container"><img style="width: 519.50px" src="img/a41c7ed26d081710.png"></p>
-<p>In the <strong>New Mule Project</strong> window, give the project a name (e.g. munit-wsc), select a Runtime, and then click on <strong>Finish</strong></p>
-<p class="image-container"><img style="width: 321.00px" src="img/95cfae49a962cae2.png"></p>
-<p>Once the new project is created, you&#39;ll be presented with a blank canvas. In the <strong>Mule Palette</strong> on the right, click on <strong>HTTP</strong> and then drag and drop the <strong>Listener</strong> into the canvas.</p>
+      <google-codelab-step label="テスト対象の Mule API の作成" duration="5">
+        <h2 is-upgraded><strong>Anypoint Studio の起動</strong></h2>
+<p>Studioを開き Newメニューから <strong>Mule Project</strong> を作成</p>
+<p class="image-container"><img style="width: 356.11px" src="img/29602cffa93a4a2a.png"></p>
+<p><strong>New Mule Project</strong> ウィンドウで, project name (e.g. munit-wsc)を入力, <strong>Runtime </strong>を選択 (複数表示されている場合は、最新バージョンを選択), その後 <strong>Finish</strong> ボタンを押下</p>
+<p class="image-container"><img style="width: 403.32px" src="img/16eed3e918c13105.png"></p>
+<h2 is-upgraded><strong>HTTP Connector の設定</strong></h2>
+<p>新しいプロジェクトが作成されると、真っ白なキャンバスが表示されます。</p>
+<p>右側の <strong>Mule Palette</strong> で <strong>HTTP</strong> をクリックし、<strong>Listener</strong> をキャンバスにドラッグ＆ドロップします。 </p>
 <p class="image-container"><img style="width: 190.00px" src="img/8f8bd0310919ade0.png"></p>
-<h2 is-upgraded><br><br><strong>Add HTTP Listener Configuration</strong></h2>
-<p>If the Mule Properties tab doesn&#39;t open, click the <strong>Listener</strong> icon and click on the green plus sign to create a new Connector configuration.</p>
-<p class="image-container"><img style="width: 420.17px" src="img/45d834daacac9d0e.png"></p>
-<p><br>Under the <strong>General</strong> tab, and in the <strong>Connection</strong> section, take note of the port. By default this will be <strong>8081</strong>. Go ahead and click on <strong>OK</strong> to accept the defaults and proceed.</p>
-<p class="image-container"><img style="width: 337.50px" src="img/65666ebe07996115.png"></p>
-<h2 is-upgraded><br><strong>Set Listener Path</strong></h2>
-<p>Back in the <strong>Listener</strong> Mule properties tab, fill in the Path field with the value <strong>/calc.</strong></p>
-<p class="image-container"><img style="width: 427.50px" src="img/de5890b55860b11f.png"></p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Configure the Web Service Consumer" duration="1">
-        <h2 is-upgraded>Add the Web Service Consumer Connector</h2>
-<p>Back in the Mule Palette, we need to add the Web Service Consumer Connector. Click on Add Modules</p>
-<p class="image-container"><img style="width: 236.50px" src="img/56b935e6c5e58247.png"></p>
-<p>From the list of available connectors, drag and drop the <strong>Web Service Consumer</strong> to the window that says Drag and drop here to add to project</p>
-<p>If a dialog window pops up asking to select a module version, select the newest version. If you don&#39;t have the latest version, click on <strong>Search in Exchange</strong> and search for <strong>Web Service Consumer</strong></p>
-<p class="image-container"><img style="width: 261.49px" src="img/ad24c08e0c4792d2.png"></p>
-<p>From the list of operations from <strong>Web Service Consumer</strong>, drag and drop the <strong>Consume</strong> onto the canvas. Place it after the Listener module.</p>
-<p class="image-container"><img style="width: 207.00px" src="img/40624ce872965165.png"></p>
-<h2 is-upgraded>Add Web Service Consumer Configuration</h2>
-<p>Select the <strong>Consume</strong> processor to open the <strong>Mule properties</strong> tab. Click on the green plus sign next to the <strong>Connector configuration</strong> field.</p>
-<p class="image-container"><img style="width: 410.50px" src="img/d8124470cb15cf1a.png"></p>
-<p><br>Paste the following into the Wsdl location field:</p>
-<pre><code>http://www.dneonline.com/calculator.asmx?wsdl</code></pre>
-<p>The <strong>Service</strong>, <strong>Port</strong>, and <strong>Address</strong> will automatically be parsed from the WSDL file. You&#39;ll need to click on the drop-down for each field and select the default for each:</p>
-<p><strong>Service</strong>: Calculator</p>
-<p><strong>Port</strong>: CalculatorSoap</p>
-<p><strong>Address</strong>: http://www.dneonline.com/calculator.asmx</p>
-<p class="image-container"><img style="width: 411.50px" src="img/35d8ac51e9037cf6.png"></p>
-<p>Click on <strong>OK</strong> to close the window.</p>
-<h2 is-upgraded>Select the SOAP Operation</h2>
-<p>In the Mule properties window for the Consume component, select the drop-down for the Operation field and select Add.</p>
-<p class="image-container"><img style="width: 444.26px" src="img/7ab7700810933cfe.png"></p>
-<p>In the next section, we&#39;ll create the SOAP request and format the response using DataWeave.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Create SOAP Request and Response using DataWeave" duration="2">
-        <h2 is-upgraded><strong>Create DataWeave Script</strong></h2>
-<p>Now that the Web Service Consumer Connector is configured with the WSDL for the SOAP endpoint we intend to use, we need to set up the SOAP request to pass in.</p>
-<p>In the Mule Palette, find and drag and drop the Transform Message component into the canvas. Drop it between the Listener and the Consume module.</p>
-<p>Also drag and drop another one after the Consume module so it looks like the screenshot.</p>
-<p class="image-container"><img style="width: 444.98px" src="img/70b9ef60c7f2c61f.png"></p>
-<h2 is-upgraded><strong>Transform Message - Request</strong></h2>
-<p>For the first Transform Message, component tab, you can see how the component provides metadata around the output.</p>
-<p class="image-container"><img style="width: 432.50px" src="img/f3df662e2a8db782.png"></p>
-<p>Let&#39;s make some modifications to the message. </p>
-<p>Under the <strong>Add</strong> node, double-click on <strong>intA</strong></p>
-<p>Notice how the DataWeave script is generated. Change null to &#34;10&#34;.</p>
-<p class="image-container"><img style="width: 418.50px" src="img/7147701d5999fa82.png"></p>
-<p>Do the same for intB. Change the null value to &#34;20&#34;.</p>
-<p class="image-container"><img style="width: 403.42px" src="img/69c3d94724975b8d.png"></p>
-<p>The final DataWeave should look like the following below. You can also copy and paste the script into Studio as well:</p>
-<p class="image-container"><img style="width: 561.00px" src="img/cc2659776fe84eba.png"></p>
+<p><strong>Mule Properties </strong>タブが開かない場合は、<strong>Listener</strong> アイコンをクリックし、緑色のプラス記号をクリックして、新しい <strong>Connector configuration </strong>を作成します。</p>
+<p class="image-container"><img style="width: 293.57px" src="img/45d834daacac9d0e.png"></p>
+<p><strong>General</strong> タブの <strong>Connection</strong> の項目で、ホストとポートを以下のように記入します。</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Host</p>
+</td><td colspan="1" rowspan="1"><p>0.0.0.0</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Port</p>
+</td><td colspan="1" rowspan="1"><p>8081</p>
+</td></tr>
+</table>
+<p>最後に「OK」をクリックします。</p>
+<p class="image-container"><img style="width: 256.50px" src="img/65666ebe07996115.png"></p>
+<p><strong>Listener </strong>のプロパティタブに戻り、<strong>Path</strong> フィールドに以下のように入力します。</p>
+<p>/calc</p>
+<p class="image-container"><img style="width: 357.85px" src="img/de5890b55860b11f.png"></p>
+<h2 is-upgraded><strong>Web Service Consumer Connector の設定</strong></h2>
+<p><strong>Mule Palette</strong> に戻って、<strong>Web Service Consumer Connector</strong> を追加する必要があります。</p>
+<p><strong>Add Modules</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 260.50px" src="img/3906bbc9861ae31c.png"></p>
+<p>利用可能なコネクタのリストから、<strong>Drag and drop here to add to project </strong>というウィンドウにWeb Service Consumerをドラッグ＆ドロップします</p>
+<p>モジュールのバージョンの選択を求めるダイアログウィンドウが表示された場合は、最新バージョン（執筆時点では 1.6.4）を選択します。最新バージョンがない場合は、S<strong>earch in Exchange </strong>をクリックして <strong>Web Service Consumer</strong> を検索してください</p>
+<p class="image-container"><img style="width: 285.90px" src="img/ba005ee0d984d656.png"></p>
+<p><strong>Web Service Consumer</strong> の操作一覧から、<strong>Consume</strong> をキャンバスにドラッグ＆ドロップします。<strong>Listener </strong> モジュールの後に配置します。</p>
+<p class="image-container"><img style="width: 224.50px" src="img/ba8241f209b2d373.png"></p>
+<p><strong>Consume</strong> プロセッサーを選択して、Muleプロパティタブを開きます。<strong>Connector configuration</strong> フィールドの横にある緑色のプラス記号をクリックします</p>
+<p class="image-container"><img style="width: 355.50px" src="img/77ed16483f33bc9f.png"></p>
+<p><strong>Wsdl</strong> の <strong>location</strong> フィールドに以下を貼り付けます。</p>
+<p>http://www.dneonline.com/calculator.asmx?wsdl</p>
+<p><strong>Service、Port、Address</strong> は、WSDLファイルから自動的に解析されます。各フィールドのドロップダウンをクリックして、それぞれのデフォルトを選択する必要があります。</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Service</p>
+</td><td colspan="1" rowspan="1"><p>Calculator</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Port</p>
+</td><td colspan="1" rowspan="1"><p>CalculatorSoap</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Address</p>
+</td><td colspan="1" rowspan="1"><p>http://www.dneonline.com/calculator.asmx</p>
+</td></tr>
+</table>
+<p>OKをクリックしてウィンドウを閉じます。</p>
+<p class="image-container"><img style="width: 397.39px" src="img/4921d4430a87bfe3.png"></p>
+<p><strong>Consume</strong> コンポーネントのMuleプロパティウィンドウで、<strong>Operation</strong> フィールドのドロップダウンを選択し、<strong>Add</strong> を選択します。</p>
+<p class="image-container"><img style="width: 377.59px" src="img/7a58a970f1091f33.png"></p>
+<p>次のセクションでは、DataWeaveを使ってSOAPリクエストを作成し、レスポンスをフォーマットします。</p>
+<h2 is-upgraded><strong>DataWeave を使った SOAP リクエストの作成</strong></h2>
+<p><strong>Web Service Consumer Connector</strong> が使用する予定の SOAP エンドポイントが WSDL で構成されているので、渡す SOAP リクエストを設定する必要があります。</p>
+<p><strong>Mule Palette</strong> で <strong>Transform Message</strong> コンポーネントを見つけて、キャンバス内の <strong>Listener</strong> と <strong>Consume</strong> モジュールの間にドラッグ＆ドロップします。</p>
+<p>また、<strong>Consume</strong> モジュールの後に別のコンポーネントをドラッグ＆ドロップすると、スクリーンショットのようになります。</p>
+<p class="image-container"><img style="width: 364.77px" src="img/a421f8481ce0901b.png"></p>
+<p>最初の <strong>Transform Message</strong> component タブでは、コンポーネントが出力に関するメタデータを提供している様子が確認できます。</p>
+<p class="image-container"><img style="width: 332.14px" src="img/f3df662e2a8db782.png"></p>
+<p>メッセージに修正を加えてみましょう。</p>
+<p>  ノードで <strong>intA</strong> をダブルクリックします。</p>
+<p>DataWeaveのスクリプトがどのように生成されるかに注目してください。<strong>null</strong> を <strong>&#34;10&#34;</strong>に変更します。</p>
+<p class="image-container"><img style="width: 321.00px" src="img/7147701d5999fa82.png"></p>
+<p><strong>intB</strong> についても同様です。<strong>null</strong> を <strong>&#34;20&#34; </strong>に変更します。</p>
+<p class="image-container"><img style="width: 377.50px" src="img/69c3d94724975b8d.png"></p>
+<p>最終的なDataWeaveは以下のようになります。また、このスクリプトをコピーしてスタジオに貼り付けることもできます：</p>
 <pre><code>%dw 2.0
 output application/xml
 ns ns0 http://tempuri.org/
@@ -127,10 +133,8 @@ ns ns0 http://tempuri.org/
                 ns0#intB: 20
         }
 }</code></pre>
-<h2 is-upgraded><strong>Transform Message - Response</strong></h2>
-<p>For the second Transform Message component:</p>
-<p class="image-container"><img style="width: 468.50px" src="img/63217a1c024a5339.png"></p>
-<p>Paste the following DataWeave script below into the Transform Message script box. This script will extract the result and return the data back in JSON format.</p>
+<p class="image-container"><img style="width: 582.42px" src="img/cc2659776fe84eba.png"></p>
+<p>2つ目の <strong>Transform Message</strong> コンポーネントには、以下のDataWeaveスクリプトを貼り付けます:</p>
 <pre><code>%dw 2.0
 output application/json
 ns ns0 http://tempuri.org/
@@ -138,118 +142,112 @@ ns ns0 http://tempuri.org/
 {
         result: payload.body.ns0#AddResponse.ns0#AddResult default 0
 }</code></pre>
+<p>このスクリプトは、結果を抽出して、JSON形式でデータを返します。</p>
+<p class="image-container"><img style="width: 476.39px" src="img/f7b1d71e4bc7624c.png"></p>
+<p>Wait until the application is deployed on your local machine.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/277869181a9b4a6d.png"></p>
+<p>Open up your browser and enter <strong>http://localhost:8081/calc</strong> in the URL bar.</p>
+<p>Make sure the API returns the result of 10 + 20 which is 30.</p>
+<p class="image-container"><img style="width: 347.00px" src="img/a85b96e58f812e75.png"></p>
+<p>Stop the application by hitting the <strong>terminate</strong> button.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/72246c97ff40c155.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Test the Mule Application" duration="1">
-        <h2 is-upgraded><strong>Run Project</strong></h2>
-<p>Our next step is to test the flow we&#39;ve built. In the <strong>Package Explorer</strong>, right click on the canvas and <strong>Run project munit-wsc</strong></p>
-<p class="image-container"><img style="width: 440.50px" src="img/4e022f7d33916434.png"></p>
-<p>The <strong>Console</strong> tab should pop-up now. Wait for the status to show <strong>DEPLOYED</strong> before moving onto the next step.</p>
-<p class="image-container"><img style="width: 522.80px" src="img/3206f1d09a51445e.png"></p>
-<h2 is-upgraded><strong>Test Flow</strong></h2>
-<p>Let&#39;s test out our flow now. Switch to Google Chrome and enter the following URL from the table below. If everything was configured correctly, you should see the following result in your browser.</p>
-<pre><code>http://localhost:8081/calc</code></pre>
-<p class="image-container"><img style="width: 321.00px" src="img/12bae364929e1bdf.png"></p>
+      <google-codelab-step label="テスト対象 API のテスト実行" duration="1">
+        <h2 is-upgraded>プロジェクト実行</h2>
+<p>次のステップは、構築したフローをテストします。 <strong>Package Explorer</strong> で、キャンバスを右クリックして、<strong>Run project munit-ws</strong> を選択します。</p>
+<p class="image-container"><img style="width: 430.07px" src="img/1dd4a80a01c26514.png"></p>
+<p><strong>Console</strong> タブが表示されるはずです。ステータスが <strong>DEPLOYED</strong> と表示されるのを待って、次のステップに進みます。<img style="width: 624.00px" src="img/277869181a9b4a6d.png"></p>
+<p>それでは、実際にフローを試してみましょう。Google Chromeに切り替えて、以下のURLを入力します。</p>
+<p>http://localhost:8081/calc</p>
+<p>すべてが正しく設定されていれば、下のような画面が表示されるはずです。</p>
+<p class="image-container"><img style="width: 380.96px" src="img/12bae364929e1bdf.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Create MUnit Test Suite" duration="1">
-        <h2 is-upgraded><strong>Generate MUnit Test Suite</strong></h2>
-<p>Back in Studio, let&#39;s create the Munit Test Suite. Select and right-click on the flow. Choose <strong>MUnit &gt; Create new munit-wsc xml suite</strong></p>
-<p class="image-container"><img style="width: 465.50px" src="img/61a8f67ff00afcf5.png"></p>
-<p>A new file will be created under <strong>src/test/munit</strong> called <strong>munit-wsc-test-suite.xml </strong>with a Test flow and a flow reference to the flow we&#39;re testing against.</p>
-<p class="image-container"><img style="width: 378.50px" src="img/d1f208b2d01df15a.png"></p>
-<h2 is-upgraded><strong>Create Mocked Message</strong><br></h2>
-<p>Before we setup the <strong>Mock when</strong>, we need to setup the mocked message that we expect.</p>
-<p>Right click on the <strong>src/test/resources</strong> folder and select <strong>New &gt; File</strong></p>
-<p class="image-container"><img style="width: 390.50px" src="img/3bb800cb683e51d2.png"></p>
-<p>In the <strong>New File</strong> dialog, enter the file name: <strong>output.xml</strong> and click on <strong>Finish</strong></p>
-<p class="image-container"><img style="width: 339.50px" src="img/28eeecccfdc9f61d.png"></p>
-<p>In the newly created file, paste the following XML:</p>
+      <google-codelab-step label="Munit テストスイートの作成" duration="2">
+        <h2 is-upgraded><strong>スケルトンの MUnit テストスイートの作成</strong></h2>
+<p>スタジオに戻って、Munit テストスイート を作成しましょう。</p>
+<p>フローを選択して右クリックします。<strong>MUnit &gt; Create blank test for this flow</strong> を選択します。</p>
+<p class="image-container"><img style="width: 409.20px" src="img/28e6440cfc353969.png"></p>
+<p><strong>src/test/munit</strong> の下に <strong>munit-wsc-test-suite.xml</strong> という新しいファイルが作成され、<strong>Test</strong> フローと、テストするフローへのフロー参照が追加されます。</p>
+<p class="image-container"><img style="width: 302.50px" src="img/d1f208b2d01df15a.png"></p>
+<h2 is-upgraded>Mock のセットアップ</h2>
+<p>モックをセットアップする前に、期待するモックされたメッセージをセットアップする必要があります。</p>
+<p><strong>src/test/resources</strong> フォルダを右クリックし、<strong>New &gt; File</strong> を選択します。</p>
+<p class="image-container"><img style="width: 350.50px" src="img/929e591f5fbf68a2.png"></p>
+<p><strong>New File</strong> ダイアログで、ファイル名を <strong>output.xml</strong> と入力し、<strong>Finish</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 276.76px" src="img/28eeecccfdc9f61d.png"></p>
+<p>作成したファイルの <strong>Source</strong> タブを選択し、以下のXMLを貼り付けます:</p>
 <pre><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
 &lt;AddResponse xmlns=&#34;http://tempuri.org/&#34; xmlns:xsd=&#34;http://www.w3.org/2001/XMLSchema&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;&gt;
 &lt;AddResult&gt;20&lt;/AddResult&gt;
 &lt;/AddResponse&gt;</code></pre>
-<p class="image-container"><img style="width: 521.38px" src="img/d7b289b4ccf4a081.png"></p>
-<h2 is-upgraded><strong>Set Up Mock When Component</strong></h2>
-<p>Next, let&#39;s set the behavior of the test flow. In the <strong>Mule Palette</strong>, select <strong>MUnit Tools</strong> and click and drag the <strong>Mock when </strong>component to the test flow. Drop it in the <strong>Behavior</strong> section of the flow.</p>
-<p class="image-container"><img style="width: 514.71px" src="img/3d5030ae20a15bc4.png"></p>
-<p>In the properties for the <strong>Mock when</strong>, type in the following into the corresponding fields:</p>
-<table>
-<tr><td colspan="1" rowspan="1"><p><strong>Processor:</strong></p>
-</td><td colspan="1" rowspan="1"><p>wsc:consume</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>With attributes</strong></p>
-</td><td colspan="1" rowspan="1"><p>None</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Then return</strong></p>
-</td><td colspan="1" rowspan="1"><p>Edit inline</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Media type</strong></p>
-</td><td colspan="1" rowspan="1"><p>application/java</p>
-</td></tr>
-</table>
-<p>Check the <strong>Payload</strong> checkbox</p>
-<p>Paste the following in the <strong>Value</strong> field</p>
-<pre><code>output application/java
----
+<p class="image-container"><img style="width: 371.96px" src="img/9c7a4da0d4497a2.png"></p>
+<p>次に、テストフローの動作を設定しましょう。<strong>Mule Palette</strong> で <strong>MUnit Tools</strong> を選択し、<strong>Mock when</strong> コンポーネントをクリックしてテストフローにドラッグします。フローの <strong>Behavior</strong> セクションにドロップします。</p>
+<p class="image-container"><img style="width: 458.69px" src="img/af023aa10b6aaafd.png"></p>
+<p><strong>Mock when</strong> のプロパティで、&#34;Processor &#34;フィールドの横にある &#34;<strong>Pick processor</strong>&#34; ボタンをクリックします。</p>
+<p class="image-container"><img style="width: 412.47px" src="img/6501ab24c0e872d5.png"></p>
+<p><strong>Consume</strong> を選択し、表示されたウィンドウで <strong>operation Add</strong> をチェックします。OKボタンを押します。</p>
+<p class="image-container"><img style="width: 382.84px" src="img/8ecb2de0c11c3350.png"></p>
+<p>スクロールダウンして、PayloadセクションのValueフィールドに以下をペーストします:</p>
+<pre><code>#[
 {
          body: readUrl(&#39;classpath://output.xml&#39;,&#39;application/xml&#39;)        
-}</code></pre>
-<p class="image-container"><img style="width: 493.50px" src="img/9f210af131cdddb6.png"></p>
-<h2 is-upgraded><strong>Set Up Assert That Component</strong></h2>
-<p>Next we want to add an <strong>Assert that. </strong>The <strong>Assert that</strong> event processor allows you to run assertions in order to validate the state of a Mule Event&#39;s content.</p>
-<p>From the <strong>Mule Palette</strong>, drag and drop an <strong>Assert that</strong> component into the <strong>Validation</strong> section of the flow.</p>
-<p class="image-container"><img style="width: 513.50px" src="img/d5fcec4a422cf414.png"></p>
-<p>Enter the following into the properties window of the <strong>Assert that</strong> component.</p>
-<table>
-<tr><td colspan="1" rowspan="1"><p>Expression:</p>
-</td><td colspan="1" rowspan="1"><p>payload.result</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p>Is:</p>
-</td><td colspan="1" rowspan="1"><p>MunitTools::equalTo(&#34;20&#34;)</p>
-</td></tr>
-</table>
-<p>The <strong>Is:</strong> field uses <a href="https://docs.mulesoft.com/munit/2.1/munit-matchers" target="_blank"><strong>MUnit Matchers</strong></a> which are a set of DataWeave functions to define assertion conditions for any value in an expression instead of a specific value.</p>
-<p class="image-container"><img style="width: 490.12px" src="img/c63cce20ad76568.png"></p>
+}
+]</code></pre>
+<p><strong>Media type</strong> の設定:</p>
+<p>application/java</p>
+<p class="image-container"><img style="width: 457.12px" src="img/3e272d312a26956e.png"></p>
+<p>次に <strong>Assert that</strong> を追加したいと思います。<strong>Assert that</strong> イベントプロセッサは、Mule Event のコンテンツの状態を検証するためにアサーションを実行することができます。</p>
+<p><strong>Mule Palette</strong> から <strong>Assert that</strong> コンポーネントをフローの <strong>Validation</strong> セクションにドラッグ＆ドロップします。</p>
+<p class="image-container"><img style="width: 481.50px" src="img/cec0bce38a2ab94d.png"></p>
+<p><strong>Assert that</strong> コンポーネントのプロパティウィンドウに次のように入力します。</p>
+<p><strong>Expression</strong>（<strong>fx</strong> ボタンを押して式モードを有効にしてから入力してください）:</p>
+<p>payload.result</p>
+<p>to:</p>
+<p>MunitTools::equalTo(&#34;20&#34;)</p>
+<p>to: <a href="https://docs.mulesoft.com/munit/2.3/munit-matchers" target="_blank">MUnit Matchers</a> はDataWeaveの関数群で、特定の値ではなく式の中の任意の値に対するアサーション条件を定義します。</p>
+<p class="image-container"><img style="width: 455.26px" src="img/d2996c1bf8c49db4.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Run MUnit Test Suite" duration="1">
-        <p>In this next section, we&#39;ll run the MUnit suite and see the results of the test. The Studio Console will show the output of the flow. Additionally there are views for MUnit to show the results, errors, messages, and coverage reports.</p>
-<h2 is-upgraded><strong>Run Test Suite</strong><br></h2>
-<p>Now that the test is setup, let&#39;s run the test suite and see if it passes.</p>
-<p>Right click on the flow and select <strong>Run MUnit suite</strong></p>
-<p class="image-container"><img style="width: 368.50px" src="img/778fc7f215847e3e.png"></p>
-<p>If everything was configured correctly, the <strong>Console</strong> will show that the test was a success.</p>
-<p class="image-container"><img style="width: 539.50px" src="img/b3faefcd687ef4d4.png"></p>
-<h2 is-upgraded><strong>Generate Report</strong></h2>
-<p>Additionally the MUnit tab will show the run was successful with zero errors and failures.</p>
-<p>In the <strong>MUnit Coverage</strong> tab, click on <strong>Generate Report</strong></p>
-<p class="image-container"><img style="width: 321.00px" src="img/5d34ff2a14ec883f.png"></p>
-<p>A <strong>MUnit Coverage Report</strong> will be generated and show an overview of the overall coverage of the tests.</p>
-<p class="image-container"><img style="width: 547.50px" src="img/78af1952002875e8.png"></p>
-<p>Lastly, if you switch back to the Mule flow, you&#39;ll see a green checkmark next to each processor that shows what the MUnit test covered.</p>
-<p class="image-container"><img style="width: 451.00px" src="img/f981f9fe992b2c87.png"></p>
+      <google-codelab-step label="MUnit テストスイートの実行" duration="1">
+        <p>次のセクションでは、MUnit スイートを実行して、テストの結果を確認します。スタジオ・コンソールには、フローの出力が表示されます。さらに、MUnit 用のビューがあり、結果、エラー、メッセージ、カバレッジ・レポートが表示されます。</p>
+<h2 is-upgraded><strong>テストスイートの実行</strong></h2>
+<p>テストの設定が完了したので、テスト・スイートを実行して合格するかどうか確認してみましょう。</p>
+<p>フローの上で右クリックし、<strong>Run MUnit suite</strong> を選択します。</p>
+<p class="image-container"><img style="width: 397.10px" src="img/812fd1b08c6b3464.png"></p>
+<h2 is-upgraded><strong>テスト実行結果の確認</strong></h2>
+<p>すべてが正しく設定されていれば、<strong>Console</strong> にテストが成功したことが表示されます。</p>
+<p class="image-container"><img style="width: 445.83px" src="img/6b1c8f06cbf3d083.png"></p>
+<p>さらに、<strong>MUnit</strong> タブには、エラーや失敗がゼロで実行が成功したことが表示されます。</p>
+<p><strong>MUnit Coverage</strong> タブで <strong>Generate Report</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 348.90px" src="img/f8356c183b4e3c73.png"></p>
+<p><strong>MUnit Coverage Report</strong> が生成され、テストの全体的なカバレッジの概要が表示されます。</p>
+<p class="image-container"><img style="width: 390.43px" src="img/fb89eade0203885b.png"></p>
+<p>最後に、Muleのフローに戻ると、各プロセッサの横に緑色のチェックマークが表示され、MUnitテストがカバーしていた内容を示しています。</p>
+<p class="image-container"><img style="width: 385.01px" src="img/30d78fb519b4d23.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Congratulations" duration="1">
-        <p>MUnit is a Mule application testing framework that allows you to easily build automated tests for your integrations and APIs. It provides a full suite of integration and unit test capabilities such as the ability to mock endpoints such as an Event Processor when it matches the defined name and attributes. </p>
-<p class="image-container"><img style="width: 416.00px" src="img/f981f9fe992b2c87.png"></p>
+      <google-codelab-step label="まとめ" duration="0">
+        <p>MUnit は Mule アプリケーションのテストフレームワークで、統合機能や API の自動テストを簡単に構築できます。統合テストやユニットテストの機能が充実しており、イベントプロセッサなどのエンドポイントが定義された名前や属性にマッチした場合にモックする機能などがあります。</p>
 <h2 is-upgraded><strong>What&#39;s next?</strong></h2>
-<p>Check out some of these codelabs...</p>
+<p>MUnit 関連の他シリーズも是非お試しください。</p>
 <ul>
-<li>TBD</li>
+<li><a href="https://codelab-jpn-site.herokuapp.com/codelabs/munit-test-recorder/index.html" target="_blank">Generate TestSuite with Test recorder</a></li>
+<li><a href="https://codelab-jpn-site.herokuapp.com/codelabs/munit-custom-assertion/index.html" target="_blank">Run Customer Assertion</a></li>
+<li><a href="https://codelab-jpn-site.herokuapp.com/codelabs/munit-spy-verify/index.html" target="_blank">Spy and Verify</a></li>
 </ul>
-<h2 is-upgraded>Resources</h2>
+<h2 is-upgraded><strong>Reference docs</strong></h2>
 <ul>
-<li>MUnit - Mule 4 Documentation</li>
+<li><a href="https://docs.mulesoft.com/munit/2.3/" target="_blank">MUnit Documentation</a></li>
 </ul>
 
 
