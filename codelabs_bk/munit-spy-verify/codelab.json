@@ -1,0 +1,27 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-10-22T07:10:13Z",
+  "id": "munit-spy-verify",
+  "duration": 0,
+  "title": "MuleSoft MUnit - スパイとベリファイ",
+  "authors": "Dejim Juang, Yoshihiro Mitsutomi",
+  "summary": "このガイドでは、特定のメッセージプロセッサの実行前後をスパイしたり、特定のメッセージプロセッサが呼び出された回数を検証したりするための、MUnitの機能の概要を説明します。",
+  "source": "1JJSmPKxp9e2HkDkrxSv9lRmesmCHsnGZOeOe2pevYiU",
+  "theme": "munit",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "MUnit"
+  ],
+  "tags": [
+    "munit",
+    "web"
+  ],
+  "feedback": "https://github.com/djuang1/mulesoft-codelabs/issues",
+  "ga": "UA-172158109-1",
+  "url": "munit-spy-verify"
+}

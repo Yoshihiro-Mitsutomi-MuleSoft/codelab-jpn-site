@@ -1,0 +1,226 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>MuleSoft MUnit - カスタムアサーションの実行</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-172158109-1"
+                  id="munit-custom-assertion"
+                  title="MuleSoft MUnit - カスタムアサーションの実行"
+                  environment="web"
+                  feedback-link="https://github.com/djuang1/mulesoft-codelabs/issues">
+    
+      <google-codelab-step label="はじめに" duration="0">
+        <p><strong>Last Updated:</strong> 2021-06-24</p>
+<h2 is-upgraded><strong>概要</strong></h2>
+<p>このガイドでは、「カスタムの実行」操作を使ってカスタムアサーションを実行するための MUnit の機能の概要を説明します。</p>
+<h2 is-upgraded><strong>何を構築するのか</strong></h2>
+<p>カスタムアサーションを持つ新しいJavaクラスを作成し、カスタムアサーションを使用してMuleフローをテストするテストスイートを作成します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/d5a12b32c07542b3.png"></p>
+<h2 is-upgraded><strong>学習内容</strong></h2>
+<ul>
+<li>Java でカスタムアサーションモジュールを作成する方法</li>
+<li>MUnit テストスイートでカスタムアサーションを実行する方法</li>
+</ul>
+<h2 is-upgraded><strong>必要条件</strong></h2>
+<ul>
+<li>Anypoint Studio 7.5.0 or later</li>
+<li>MUnit 2.2.5 or later</li>
+<li>MUnit Anypoint Studio Plugin 2.5.0 or later</li>
+<li>Mule Runtime Engine 4.3.0 or later</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Muleプロジェクトの設定" duration="0">
+        <h2 is-upgraded><strong>Anypoint Studioの起動</strong></h2>
+<p>まだAnypoint Studioを開いていない場合は、Anypoint Studioを開きます。ワークスペースは何でも構いません。</p>
+<h2 is-upgraded>Mule プロジェクトの新規作成</h2>
+<p><strong>File</strong>メニューから<strong>New &gt; Mule Project</strong>を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/507158efc19f6ac3.png"></p>
+<p><strong>New Mule Project</strong>ウィンドウで、プロジェクトに名前を付け（例：munit-run-custom）、<strong>Runtime</strong>を選択し（例：Mule Server 4.3.0 EE）、<strong>Finish</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ef10b184ad2b2c46.png"></p>
+<h2 is-upgraded><strong>HTTP listenerの設定</strong></h2>
+<p>新しいプロジェクトが作成されると、真っ白なキャンバスが表示されます。</p>
+<p>右側の<strong>Mule Palette</strong>から、<strong>HTTP &gt; Listener</strong>コンポーネントをキャンバスにドラッグ＆ドロップします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4e699d6c2b169d07.png"></p>
+<p><strong>Listener</strong>の<strong>Mule Properties</strong>で、緑のプラス記号をクリックして、<strong>Connector configuration</strong>を作成します。<img style="width: 624.00px" src="img/694b08e8c31cc510.png"></p>
+<p><strong>General</strong>タブ<strong>のConnection</strong>セクションでは、デフォルトの選択のまま<strong>OK</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/8c776e3f618383e3.png"></p>
+<p>Muleのプロパティタブに戻り、<strong>Listener</strong>の <strong>Path</strong>フィールドに以下のように記入します。</p>
+<p>/custom</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a7fcb0e09c19d448.png"></p>
+<h2 is-upgraded><strong>Transform Message コンポーネントの設定</strong></h2>
+<p>右側の<strong>Mule Palette</strong>から、<strong>Core</strong> &gt; <strong>Transform Message</strong>コンポーネントを、前のステップで作成したフローにドラッグ＆ドロップします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/c3574bb2973a8b2e.png"></p>
+<p><strong>Transform Message</strong>コンポーネントをクリックし、以下のDataWeave Scriptをコピー＆ペーストします。</p>
+<pre><code>%dw 2.0
+output application/json
+---
+[&#39;111&#39;,&#39;222&#39;,&#39;333&#39;]</code></pre>
+<p class="image-container"><img style="width: 624.00px" src="img/15c2c87ad8086727.png"></p>
+<h2 is-upgraded><strong>Logger コンポーネントの設定</strong></h2>
+<p>右側の<strong>Mule Palette</strong>から、<strong>Core</strong> &gt; <strong>Logger</strong>コンポーネントを、前のステップで作成したフローにドラッグ＆ドロップします。<img style="width: 624.00px" src="img/64154513ed39578c.png"></p>
+<p><strong>Message</strong>フィールドの<strong>fx</strong>ボタンをクリックして、<strong>Expression Mode</strong>にします。<img style="width: 469.00px" src="img/12d35e366ba205c8.png"></p>
+<p>Messageフィールドを以下のように設定します。</p>
+<pre><code>payload</code></pre>
+<p class="image-container"><img style="width: 624.00px" src="img/843d85b3244ae978.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Muleプロジェクトの設定確認" duration="0">
+        <h2 is-upgraded>Mule アプリケーションの起動</h2>
+<p>次のステップは、構築したフローをテストすることです。キャンバス上で右クリックし、<strong>Run project munit-run-custom</strong>を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/14f7a65a0fcaf21f.png"></p>
+<p><strong>Console</strong>が表示されるはずです。ステータスが<strong>DEPLOYED</strong>と表示されるのを待って、次のステップに進みます。<img style="width: 624.00px" src="img/acad26b24ec37632.png"></p>
+<h2 is-upgraded><strong>Muleアプリケーションのテスト実行</strong></h2>
+<p>ブラウザを開き、URLバーに<strong>http://localhost:8081/custom</strong>と入力します。</p>
+<p>すべてが正しく設定されていれば、下のような画面が表示されます。</p>
+<p class="image-container"><img style="width: 436.00px" src="img/325b9642ead5191a.png"></p>
+<p>停止アイコンをクリックして、アプリケーションを停止します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a8b790532780d1a.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="MUnit テストスイートの作成" duration="0">
+        <h2 is-upgraded><strong>空のMUnitテストケースの生成</strong></h2>
+<p>スタジオに戻って、Munit テストスイートを作成しましょう。</p>
+<p>フローを選択して右クリックします。<strong>MUnit &gt; Create blank test for this flow</strong> を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4550d7321830b87d.png"></p>
+<p>空白の MUnit Test Scope が作成されます。実行時には、Muleアプリケーションのフローへの<strong>Flow Reference</strong>が表示されます。</p>
+<p class="image-container"><img style="width: 376.00px" src="img/95f8d0e34db9650b.png"></p>
+<h2 is-upgraded><strong>MUnit Assertのmaven依存関係をプロジェクトに追加</strong></h2>
+<p>次に、Java クラスを使用してカスタムアサーションを作成します。</p>
+<p>プロジェクトの<strong>Package Explorer</strong>で、pom.xmlを見つけて開きます。</p>
+<p class="image-container"><img style="width: 326.00px" src="img/8ad0382d8e875c5d.png"></p>
+<p>dependenciesタグ内に以下のエントリを追加します。</p>
+<pre><code>&lt;dependency&gt;
+        &lt;groupId&gt;com.mulesoft.munit&lt;/groupId&gt;
+        &lt;artifactId&gt;munit-assert&lt;/artifactId&gt;
+        &lt;version&gt;2.3.4&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+<p class="image-container"><img style="width: 491.00px" src="img/cf2149e2735fb374.png"></p>
+<h2 is-upgraded><strong>カスタムアサーションの作成</strong></h2>
+<p>プロジェクトの<strong>Package Explorer</strong> で、<strong>src/test/java</strong>フォルダを探します。</p>
+<p>そのフォルダを右クリックし、<strong>New</strong> &gt; <strong>Class</strong>を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/db44f94762e088d.png"></p>
+<p><strong>New Java Class</strong>ウィンドウで、<strong>Package: </strong>フィールドに以下を入力します。</p>
+<p>com.mulesoft</p>
+<p><strong>Name</strong>フィールドには</p>
+<p>CustomAssertion</p>
+<p>を入力し、<strong>Interfaces: </strong>フィールドの<strong>Add..</strong>.をクリックします。</p>
+<p class="image-container"><img style="width: 594.00px" src="img/37938a758319bee2.png"></p>
+<p>表示されたウィンドウで、次のように入力します。</p>
+<p>MunitAssertion</p>
+<p>を<strong>Choose interfaces: </strong>に入力し、最初に一致した項目を選択します。</p>
+<p><strong>OK</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 393.00px" src="img/35dc8fff90fcf958.png"></p>
+<p><strong>Finish</strong> をクリックしてウィンドウを閉じます。<img style="width: 592.00px" src="img/75484c7e6914ce7a.png"></p>
+<p>自動的に生成されたメソッド・スタブを持つ、新しく作成されたJavaクラスが表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/98e660d23b1c5390.png"></p>
+<p>以下のコードをコピーしてexecuteメソッドに貼り付けます。</p>
+<pre><code>if (!&#34;\&#34;111\&#34;&#34;.equals(arg0.getValue() + &#34;&#34;)) {
+    throw new AssertionError(&#34;Error: the payload is incorrect&#34;);
+}</code></pre>
+<p>このコードは、カスタムアサーションに渡されたペイロードの値をチェックします。</p>
+<p>その値が等しくない場合は、アサーションエラーを投げます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4a5598f132e882f2.png"></p>
+<h2 is-upgraded><strong>カスタムアサーションモジュールのエクスポート</strong></h2>
+<p>MUnit モジュールが使用するアプリケーションのクラスにアクセスするためには、そのクラスをエクスポートする必要があります。そのためには、<strong>mule-artifact.json</strong> ファイルを修正する必要があります。</p>
+<aside class="special"><p><strong>Note:</strong> Javaクラスのエクスポートに関する詳しい情報は<a href="https://docs.mulesoft.com/mule-runtime/4.3/how-to-export-resources#how-to-export-java-classes" target="_blank">こちら</a>をご覧ください。</p>
+</aside>
+<p>プロジェクトフォルダの中に<strong>mule-artifact.json</strong>ファイルがありますので、ファイルをダブルクリックして開き、編集できるようにします。</p>
+<p class="image-container"><img style="width: 338.00px" src="img/de292f0cb0d0b6c4.png"></p>
+<p>初期ファイルは以下のようになっています。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f65e4e8cb5d9407e.png"></p>
+<p>以下のコードをコピーして、ファイルに貼り付けてください。</p>
+<pre><code>{
+  &#34;minMuleVersion&#34;: &#34;4.3.0&#34;,
+  &#34;classLoaderModelLoaderDescriptor&#34;: {
+    &#34;id&#34;: &#34;mule&#34;,
+    &#34;attributes&#34;: {
+      &#34;exportedPackages&#34;: [
+        &#34;com.mulesoft&#34;
+      ]
+    }
+  }  
+}</code></pre>
+<p><strong>exportedPackages</strong>フィールドに、先ほど作成したパッケージが含まれていることに注目してください。</p>
+<p class="image-container"><img style="width: 460.00px" src="img/1f5658a72c8b7ccd.png"></p>
+<h2 is-upgraded><strong>テストスコープの構築</strong></h2>
+<p>テストスコープの構築を終えましょう。Mule パレットから、<strong>MUnit Tools &gt; Run</strong> の<strong>custom operation</strong>をスコープの Validation 側にドラッグ＆ドロップします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/69caeb376b991a30.png"></p>
+<p><strong>Mule Properties</strong>ウィンドウで、以下のフィールドに対応するデータを入力します。</p>
+<p><strong>Assertion:</strong></p>
+<p><code>com.mulesoft.CustomAssertion</code></p>
+<p><strong>Expression:</strong></p>
+<p><code>#[payload[0]]</code></p>
+<p class="image-container"><img style="width: 624.00px" src="img/7346c5240e945fc9.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="MUnit テストスイートの実行" duration="0">
+        <p>次のセクションでは、MUnit スイートを実行して、テストの結果を確認します。スタジオ・コンソールには、フローの出力が表示されます。さらに、MUnit 用のビューがあり、結果、エラー、メッセージ、カバレッジ・レポートが表示されます。</p>
+<h2 is-upgraded><strong>テストスイートの実行</strong></h2>
+<p>テストのセットアップが完了したので、テスト・スイートを実行して、合格するかどうかを確認してみましょう。</p>
+<p>フローを右クリックし、<strong>Run MUnit suite</strong>を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4dc15d27e68ab493.png"></p>
+<p>すべてが正しく設定されていれば、<strong>Console</strong>にテストが成功したことが表示されます。<img style="width: 624.00px" src="img/727ac4f933cb3819.png"></p>
+<p>さらに、<strong>MUnit</strong>タブには、エラーや失敗がゼロで実行が成功したことが表示されます。</p>
+<p><strong>MUnit Coverage</strong>タブで<strong>Generate Report</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 345.00px" src="img/4dd52912976a605c.png"></p>
+<p><strong>MUnit Coverage Report </strong>が生成され、テストの全体的なカバレッジの概要が表示されます。<img style="width: 624.00px" src="img/2cf229b4dd596b7b.png"></p>
+<p>最後に、Muleのフローに戻ると、各プロセッサの横に緑色のチェックマークが表示され、MUnitテストがカバーしていた内容を示しています。</p>
+<p class="image-container"><img style="width: 365.00px" src="img/1168aa2da1b1a925.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="おめでとうございます" duration="0">
+        <p>これで、カスタムアサーションを作成し、それを MUnit テストケースで活用することができました。</p>
+<h2 is-upgraded>次は?</h2>
+<p>Check out some of these codelabs...</p>
+<ul>
+<li>TBD</li>
+</ul>
+<h2 is-upgraded><strong>参考ドキュメント</strong></h2>
+<ul>
+<li><a href="https://docs.mulesoft.com/munit/2.3/" target="_blank">MUnit Documentation</a></li>
+<li><a href="https://docs.mulesoft.com/munit/2.3/run-custom-event-processor" target="_blank">Run Custom Event Processor Documentation</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

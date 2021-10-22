@@ -1,0 +1,27 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-10-22T07:52:31Z",
+  "id": "munit-test-recorder",
+  "duration": 0,
+  "title": "MuleSoft MUnit - Test Recorderでテストスイートを生成する",
+  "authors": "Sochiro Anzai",
+  "summary": "テストレコーダーでMUnitテストスイートを作成します。\nMUnit Toolsの操作ので、ビルドせずにMUnitのテストスイートを作成します。",
+  "source": "1K8mIYDXtXCIAyi3YhOspxrHHQBTVlE-W_UZNl7Zh3z0",
+  "theme": "munit",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "MUnit"
+  ],
+  "tags": [
+    "munit",
+    "web"
+  ],
+  "feedback": "https://github.com/djuang1/mulesoft-codelabs/issues",
+  "ga": "UA-172158109-1",
+  "url": "munit-test-recorder"
+}
