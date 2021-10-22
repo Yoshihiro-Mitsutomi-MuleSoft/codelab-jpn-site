@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
-  <title>MuleSoft MUnit - Generate Test Suite with Test Recorder</title>
+  <title>MuleSoft MUnit - Test Recorderでテストスイートを生成する</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
@@ -23,26 +23,26 @@
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
   <google-codelab codelab-gaid="UA-172158109-1"
                   id="munit-test-recorder"
-                  title="MuleSoft MUnit - Generate Test Suite with Test Recorder"
+                  title="MuleSoft MUnit - Test Recorderでテストスイートを生成する"
                   environment="web"
                   feedback-link="https://github.com/djuang1/mulesoft-codelabs/issues">
     
-      <google-codelab-step label="Introduction" duration="0">
+      <google-codelab-step label="はじめに" duration="0">
         <p><strong>Last Updated:</strong> 2021-06-18</p>
-<h2 is-upgraded><strong>Overview</strong></h2>
-<p>This guide provides an overview of the features of MUnit Test Recorder. This feature enables you to record a processing flow and then configure a unit test based on the captured event.</p>
-<p>You&#39;ll see the test suite which you have created in the earlier lab can be automatically generated with this feature.</p>
-<h2 is-upgraded><strong>What you&#39;ll build</strong></h2>
-<p>In this codelab, you&#39;re going to build the MUnit test suite which is equivalent to the one you have built in the previous lab. Thanks to the Test Recorder, you don&#39;t need to build it from scratch by leveraging operations provided by MUnit tools.</p>
+<h2 is-upgraded><strong>概要</strong></h2>
+<p>このガイドでは、MUnit Test Recorder の機能の概要を説明します。この機能を使うと、処理の流れを記録し、取得したイベントに基づいてユニットテストを構成することができます。</p>
+<p>以前のラボで作成したテストスイートが、この機能を使って自動的に生成できることが理解できます。</p>
+<h2 is-upgraded><strong>何を構築するのか</strong></h2>
+<p>このコードラボでは、前のラボで作成したものと同様の MUnit テスト・スイートを作成します。Test Recorder により、MUnit ツールが提供する操作を利用してゼロから構築する必要はありません。</p>
 <p class="image-container"><img style="width: 595.83px" src="img/77d3a64e71535e21.png"></p>
-<aside class="warning"><p><strong>Note:</strong> If you haven&#39;t complete the previous lab, <a href="https://mulesoft-codelabs.herokuapp.com/codelabs/munit-mocking/index.html#0" target="_blank">MuleSoft MUnit - Using the Mock When Processor</a>, go back to the lab and create Mule Application to test at least.(Up to step 5)</p>
+<aside class="warning"><p><strong>Note: </strong>前のラボの「<a href="https://mulesoft-codelabs.herokuapp.com/codelabs/munit-mocking/index.html#0" target="_blank">MuleSoft MUnit - Using the Mock When Processor</a>」を完了していない場合は、ラボに戻って、少なくともテスト用のMuleアプリケーションを作成してください（ステップ5まで）。</p>
 </aside>
-<h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
-<ul class="checklist">
-<li>How to capture flow execution by leveraging MUnit Test Recorder</li>
-<li>How to customize the automatically generated Test Suite to make it meet with your need</li>
+<h2 is-upgraded><strong>学習内容</strong></h2>
+<ul>
+<li>MUnit Test Recorder を利用してフローの実行を記録する方法</li>
+<li>自動生成されたテストスイートをカスタマイズして自分のニーズに合わせる方法</li>
 </ul>
-<h2 is-upgraded><strong>What you&#39;ll need</strong></h2>
+<h2 is-upgraded><strong>必要条件</strong></h2>
 <ul>
 <li>Anypoint Studio 7.5.0 or later</li>
 <li>MUnit 2.2.5 or later</li>
@@ -53,90 +53,86 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Setup Mule Project" duration="3">
-        <p>(You can skip this section, if you have completed <a href="https://mulesoft-codelabs.herokuapp.com/codelabs/munit-mocking/index.html" target="_blank">the previous lab</a> and munit-wsc project is in place.)</p>
-<h2 is-upgraded><strong>Start Up Anypoint Studio</strong></h2>
-<p>Open Anypoint Studio and specify the workspace you have used for <a href="https://mulesoft-codelabs.herokuapp.com/codelabs/munit-mocking/index.html" target="_blank">the previous lab</a>.</p>
-<h2 is-upgraded>Open Up Mule Project to test</h2>
-<p>In the Package Explorer, find the project you have created in the previous lab. If the project is closed, right click the project and choose <strong>OpenProject</strong>.</p>
+      <google-codelab-step label="Mule Projectの設定" duration="0">
+        <p>(前のラボが完了していて、munit-wscプロジェクトが設置されている場合は、このセクションをスキップすることができます。)</p>
+<h2 is-upgraded><strong>Anypoint Studioの起動</strong></h2>
+<p>Anypoint Studioを開き、<a href="https://mulesoft-codelabs.herokuapp.com/codelabs/munit-mocking/index.html" target="_blank">前のラボ</a>で使用したワークスペースを指定します。</p>
+<h2 is-upgraded>テストのためにMuleプロジェクトを開く</h2>
+<p>パッケージ・エクスプローラーで、前のラボで作成したプロジェクトを探します。プロジェクトが閉じている場合は、プロジェクトを右クリックし<strong>てOpenProject</strong>を選択します。</p>
 <p class="image-container"><img style="width: 386.73px" src="img/95e5bdf7ed6657e3.png"> </p>
-<p>Double click <strong>munit-wsc.xml</strong> under src/main/mule and open the canvas.</p>
+<p>src/main/muleの下にある<strong>munit-wsc.xml</strong>をダブルクリックして、キャンバスを開きます。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/4a6278aed4492c13.png"></p>
-<h2 is-upgraded><strong>(Optional)Make Sure the app work fine</strong></h2>
-<p>Right click the canvas and choose <strong>Run project munit-wsc</strong></p>
-<p class="image-container"><img style="width: 338.50px" src="img/c97b6b00a1c59942.png"></p>
-<p>Wait until the application is deployed on your local machine.</p>
+<h2 is-upgraded><strong>(オプション)アプリが正常に動作することを確認する</strong></h2>
+<p>キャンバスを右クリックし、<strong>Run project munit-wsc</strong>を選択します。<img style="width: 338.50px" src="img/c97b6b00a1c59942.png"></p>
+<p>アプリケーションがローカルマシンにデプロイされるまで待ちます。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/277869181a9b4a6d.png"></p>
-<p>Open up your browser and enter <strong>http://localhost:8081/calc</strong> in the URL bar.</p>
-<p>Make sure the API returns the result of 10 + 20 which is 30.</p>
+<p>ブラウザを開き、URLバーに<strong>http://localhost:8081/calc</strong>と入力します。</p>
+<p>APIが10＋20が30という結果を返すことを確認してください。</p>
 <p class="image-container"><img style="width: 347.00px" src="img/a85b96e58f812e75.png"></p>
-<p>Stop the application by hitting the <strong>terminate</strong> button.</p>
-<p class="image-container"><img style="width: 624.00px" src="img/72246c97ff40c155.png"></p>
+<p><strong>terminate</strong>ボタンを押して、アプリケーションを停止します。<img style="width: 624.00px" src="img/72246c97ff40c155.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Capture Flow Execution with Test Recorder" duration="2">
-        <h2 is-upgraded>Start up Test Recorder on the flow in interest</h2>
-<p>Right click <strong>munit-wscFlow</strong> and choose <strong>MUnit &gt; Record test for this flow</strong></p>
+      <google-codelab-step label="テストレコーダーでフローの実行をキャプチャ" duration="0">
+        <h2 is-upgraded><strong>対象となるフローで Test Recorder を起動します。</strong></h2>
+<h2 is-upgraded>munit-wscFlowを右クリックし、MUnit &gt; Record test for this flowを選択する。</h2>
 <p class="image-container"><img style="width: 624.00px" src="img/98e6988939f6f7c6.png"></p>
-<p>Wait until Test Recorder is turned to waiting status.</p>
+<p>テストレコーダーが待機状態になるまで待ちます。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/158d11734380e411.png"></p>
 <aside class="warning"><p><strong>Note:</strong> In case the error below pops up, restart Anypoint Studio.</p>
 <p class="image-container"><img style="width: 401.00px" src="img/62d4e1155647c48f.png"></p>
 </aside>
-<h2 is-upgraded><strong>Run the Mule Application to test</strong></h2>
-<p>Open up your browser and enter <strong>http://localhost:8081/calc</strong> in the URL bar.</p>
-<p>Make sure the API returns the result of 10 + 20 which is 30.</p>
+<h2 is-upgraded><strong>Muleアプリケーションを実行してテストする</strong></h2>
+<p>ブラウザを開き、URLバーに<strong>http://localhost:8081/calc</strong>と入力します。</p>
+<p>APIが10＋20が30という結果を返すことを確認します。</p>
 <p class="image-container"><img style="width: 347.00px" src="img/a85b96e58f812e75.png"></p>
-<p>Observe <strong>Configure test</strong> button is now enabled on the Test Recorder window</p>
+<p>テストレコーダーのウィンドウで、<strong>Configure test</strong>ボタンが有効になることを確認ください。</p>
 <p class="image-container"><img style="width: 474.00px" src="img/67e8b746a81c9794.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Configure the test suite generated by Test Recorder" duration="3">
-        <h2 is-upgraded><strong>Create the web app manifest</strong></h2>
-<p>Click Configure test button</p>
+      <google-codelab-step label="Test Recorderで生成したテストスイートの設定" duration="0">
+        <h2 is-upgraded><strong>ウェブアプリのマニフェストの作成</strong></h2>
+<p>Configure test ボタンをクリック</p>
 <p class="image-container"><img style="width: 474.00px" src="img/4d6a2a207ed49817.png"></p>
-<p>Specify self explanatory test name by adding <strong>recorder</strong> inside File name and Test name.</p>
-<p class="image-container"><img style="width: 624.00px" src="img/27dc4c6e976f16a8.png"></p>
-<p>Hit <strong>Next</strong> button</p>
+<p>ファイル名とテスト名の中に<strong>recorder</strong>を入れて、わかりやすいテスト名を指定します。<img style="width: 624.00px" src="img/27dc4c6e976f16a8.png"></p>
+<p><strong>Next</strong> ボタンをクリック</p>
 <p class="image-container"><img style="width: 624.00px" src="img/bb7f142db6f06e95.png"></p>
-<p>Now let us make SOAP WS call mock instead of actually consuming the WS as we did in the previous lab.</p>
-<p>Choose <strong>Consume</strong> operation.</p>
-<p>Choose <strong>Mock this processor</strong>.</p>
+<p>ここでは、前のラボで実施したように、実際にWSを利用するのではなく、SOAP WSの呼び出しをモックにしてみましょう。</p>
+<p><strong>Consume</strong> operation を選択します。</p>
+<p><strong>Mock this processor </strong>を選択します。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/2d5eab93421c9ec1.png"></p>
-<p>Observe <strong>Mock</strong> section to see what values are returned by this mock. If you expand <strong>Payload &gt; body</strong>, you see 30 is returned in the AddResult field.</p>
+<p><strong>Mock</strong>セクションでは、このモックがどのような値を返すかを確認します。<strong>Payload &gt; body</strong> を展開すると、AddResult フィールドに 30 が返されていることがわかります。</p>
 <p class="image-container"><img style="width: 546.00px" src="img/d412e14783370a84.png"></p>
-<p>Hit <strong>Next</strong> button.</p>
+<p><strong>Next</strong> ボタンをクリック</p>
 <p class="image-container"><img style="width: 542.00px" src="img/28508914963271b2.png"></p>
-<p>Hit <strong>Finish</strong> button.</p>
+<p><strong>Finish</strong> ボタンをクリック</p>
 <p class="image-container"><img style="width: 624.00px" src="img/3c5c90aa1f984edf.png"></p>
-<p>You see the test suite is automatically based on your configuration.</p>
-<p>If you choose <strong>Mock Consume</strong> and see <strong>Payload</strong> section, you find that <strong>mock_payload.dwl </strong>under<strong> munitwscFlowrecordertest </strong>folder  is used for the mock.</p>
+<p>テストスイートは、あなたの設定に基づいて自動的に実行されていることがわかります。</p>
+<p><strong>Mock Consume</strong>を選択して<strong>Payload</strong>セクションを見ると、<strong>munitwscFlowrecordertest</strong>フォルダにある<strong>mock_payload.dwl</strong>がモックに使用されていることがわかります。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/d64c80cef878fb6a.png"></p>
-<p>If you open up the file, you will see the configured mock data is set to be returned.</p>
+<p>ファイルを開いてみると、設定されたモックデータが返ってくるようになっています。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/54240387568b2fff.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Run MUnit Test Suites" duration="3">
-        <h2 is-upgraded><strong>Run the test suite</strong></h2>
-<p>On munit-wsc-recorder-suite canvas, right click and choose <strong>Run MUnit Suite</strong>.</p>
-<p class="image-container"><img style="width: 525.00px" src="img/b192cafa7b803d68.png"></p>
-<p>If everything is correct, the Console will show that the test is run successfully.</p>
+      <google-codelab-step label="MUnitテストスイートの実行" duration="0">
+        <h2 is-upgraded><strong>テストスイートの実行</strong></h2>
+<p>munit-wsc-recorder-suiteのキャンバス上で右クリックし、<strong>Run MUnit Suite</strong>を選択します。<img style="width: 525.00px" src="img/b192cafa7b803d68.png"></p>
+<p>すべてが正しく実行されると、コンソールにテストが正常に実行されたことが表示されます。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/ed0f665e4248edc0.png"></p>
-<p>You&#39;ll also see the test result on the MUnit view which is on your left bottom corner.</p>
+<p>テストの結果は、左下の MUnit ビューにも表示されます。</p>
 <p class="image-container"><img style="width: 452.00px" src="img/730275fa96b2322f.png"></p>
-<p>You can see the Coverage report as you did in the previous lab.</p>
+<p>前のラボで行ったように、カバレッジレポートを見ることができます。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/4b5a2844a73b915a.png"></p>
-<p>Passed operations are marked with green tick.</p>
+<p>合格したオペレーションには緑のチェックマークがつきます。</p>
 <p class="image-container"><img style="width: 624.00px" src="img/d7cdadf1b910858f.png"></p>
-<h2 is-upgraded><strong>Run all test suites available in the project</strong></h2>
-<p>You can run the all test suites which available in the Mule project at once.</p>
-<p>Right click on the project in the <strong>Package Explorer</strong> and choose <strong>MUnit</strong> &gt; <strong>Run Tests</strong>.</p>
+<h2 is-upgraded><strong>プロジェクトで利用可能なすべてのテスト・スイートの実行</strong></h2>
+<p>Mule プロジェクトで利用可能なすべてのテスト・スイートを一度に実行することができます。</p>
+<p><strong>Package Explorer</strong>でプロジェクトを右クリックし、<strong>MUnit</strong> &gt; <strong>Run Tests</strong>を選択してください。</p>
 <p class="image-container"><img style="width: 609.00px" src="img/5308f538a1cde304.png"></p>
 <p>You&#39;ll see the test suite you configured in the previous lab and the one generated in this lab are executed.</p>
 <p class="image-container"><img style="width: 538.00px" src="img/c9e70456f868a718.png"></p>
@@ -144,15 +140,15 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Congratulations" duration="0">
-        <p>Congratulations, you&#39;ve successfully built the MUnit test suite without developing test cases with MUnit tools! </p>
-<p>In the real case scenario, you&#39;ll need much more test cases. You can utilize the auto-generated test case as a template and fork it so that you can avoid creating the test cases from scratch to save your time.</p>
-<h2 is-upgraded><strong>What&#39;s next?</strong></h2>
-<p>Check out some of these codelabs...</p>
+      <google-codelab-step label="おめでとうございます" duration="0">
+        <p>おめでとうございます。MUnit ツールでテストケースを開発することなく、MUnit テストスイートを構築することに成功しました。</p>
+<p>実際のシナリオでは、もっと多くのテストケースが必要になります。自動生成されたテストケースをテンプレートとして利用し、それをフォークすることで、テストケースを一から作らなくても済むようになり、時間を節約することができます。</p>
+<h2 is-upgraded>次は<strong>?</strong></h2>
+<p>コードラボの一部をご紹介します...</p>
 <ul>
 <li>TBD</li>
 </ul>
-<h2 is-upgraded><strong>Reference docs</strong></h2>
+<h2 is-upgraded><strong>参考ドキュメント</strong></h2>
 <ul>
 <li><a href="https://docs.mulesoft.com/munit/2.3/" target="_blank">MUnit Documentation</a></li>
 <li><a href="https://docs.mulesoft.com/munit/2.3/test-recorder-examples" target="_blank">Test Recorder sample available on the documentation</a></li>

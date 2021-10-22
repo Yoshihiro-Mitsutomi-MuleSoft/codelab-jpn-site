@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2021-06-28T09:44:37Z",
+  "updated": "2021-10-22T07:09:28Z",
   "id": "munit-custom-assertion",
-  "duration": 12,
-  "title": "MuleSoft MUnit - Run Custom Assertion",
-  "authors": "Dejim Juan, Yoshihiro Mitsutomi",
-  "summary": "This guide provides an overview of the features of MUnit to run a custom assertion using the ‘Run Custom' operation.",
-  "source": "1PbWYtFpxYMv3k_h8qOjVp-LDqzLm_xdZwQJKdClrAKc",
+  "duration": 0,
+  "title": "MuleSoft MUnit - カスタムアサーションの実行",
+  "authors": "Dejim Juang, Yoshihiro Mitsutomi",
+  "summary": "このガイドでは、「カスタムの実行」操作を使ってカスタムアサーションを実行するための MUnit の機能の概要を説明します。",
+  "source": "1PaX_s_saeDYTXGSvd3fyio_sMOKQCNC_OwlFHRbJJpc",
   "theme": "munit",
   "status": [
     "published"
@@ -17,6 +17,11 @@
   "category": [
     "MUnit"
   ],
-  "tags": [],
+  "tags": [
+    "munit",
+    "web"
+  ],
+  "feedback": "https://github.com/djuang1/mulesoft-codelabs/issues",
+  "ga": "UA-172158109-1",
   "url": "munit-custom-assertion"
 }

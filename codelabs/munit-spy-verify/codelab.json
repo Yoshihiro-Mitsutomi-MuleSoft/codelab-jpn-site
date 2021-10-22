@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2021-07-03T10:36:28Z",
+  "updated": "2021-10-22T07:10:13Z",
   "id": "munit-spy-verify",
-  "duration": 12,
-  "title": "MuleSoft MUnit - Spy and Verify",
+  "duration": 0,
+  "title": "MuleSoft MUnit - スパイとベリファイ",
   "authors": "Dejim Juang, Yoshihiro Mitsutomi",
-  "summary": "This guide provides an overview of the features of MUnit to spy on a certain message processor before and after its execution as well as validating the number of times a particular message processor was called.",
-  "source": "1SGH0UlEOlrClvxEpYI76vbfh3SlcBoO1OxmqUzzMBUs",
+  "summary": "このガイドでは、特定のメッセージプロセッサの実行前後をスパイしたり、特定のメッセージプロセッサが呼び出された回数を検証したりするための、MUnitの機能の概要を説明します。",
+  "source": "1JJSmPKxp9e2HkDkrxSv9lRmesmCHsnGZOeOe2pevYiU",
   "theme": "munit",
   "status": [
     "published"
