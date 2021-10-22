@@ -3,7 +3,7 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2021-10-22T07:52:23Z",
+  "updated": "2021-10-22T07:52:31Z",
   "id": "munit-test-recorder",
   "duration": 0,
   "title": "MuleSoft MUnit - Test Recorderでテストスイートを生成する",
