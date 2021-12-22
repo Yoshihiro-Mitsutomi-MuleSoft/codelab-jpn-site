@@ -49,3 +49,12 @@ gulp dist
 ```
 
  
+## Notes
+
+The published URL is the following format.
+It is required to choose an unique value as URL path for published site.
+
+```
+https://codelab-jpn-site.herokuapp.com/codelabs/<The value of field 'URL' document header>/index.html
+```
+
