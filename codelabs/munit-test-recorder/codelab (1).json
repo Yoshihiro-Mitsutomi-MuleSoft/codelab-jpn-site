@@ -1,0 +1,27 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-06-27T11:50:04Z",
+  "id": "munit-test-recorder",
+  "duration": 11,
+  "title": "MuleSoft MUnit - Generate Test Suite with Test Recorder",
+  "authors": "Yoshihiro Mitsutomi",
+  "summary": "Generate MUnit test suite with test recorder. You'll create MUnit test suite without building it with MUnit Tools operations.",
+  "source": "15z427Sb93Q3aDXlONhDwoKsCw0zBKzU_HGinDkEjvyw",
+  "theme": "munit",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "MUnit"
+  ],
+  "tags": [
+    "munit",
+    "web"
+  ],
+  "feedback": "https://github.com/djuang1/mulesoft-codelabs/issues",
+  "ga": "UA-172158109-1",
+  "url": "munit-test-recorder"
+}
