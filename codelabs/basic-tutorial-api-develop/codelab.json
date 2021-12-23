@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-12-23T01:22:32Z",
+  "id": "basic-tutorial-api-develop",
+  "duration": 5,
+  "title": "[BT2] API の開発",
+  "authors": "Soichiro Anzai",
+  "summary": "このガイドでは、Exchangeで公開したAPI仕様を用いてStudioにプロジェクトを作成しAnypoint StudioのMule Runtime Engine 上で実行後テストします。",
+  "source": "1cVdiXv79vn8dBD3xAcqtfeWWMTLI10_SGuGX-uBebLE",
+  "theme": "basictutorial",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "basictutorial"
+  ],
+  "tags": [
+    "tutorial"
+  ],
+  "ga": "UA-172158109-1",
+  "url": "basic-tutorial-api-develop"
+}

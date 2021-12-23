@@ -1,0 +1,194 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>[BT2] API の開発</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-172158109-1"
+                  id="basic-tutorial-api-develop"
+                  title="[BT2] API の開発"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="はじめに" duration="0">
+        <p><strong>Last Updated:</strong> 2021-12-23</p>
+<h2 is-upgraded><strong>概要</strong></h2>
+<p>このガイドでは、Exchangeで公開したAPI仕様を用いて、Studioにプロジェクトを作成し、Anypoint StudioのMule Runtime Engine 上で実行後テストします。</p>
+<h2 is-upgraded><strong>何を作成するのか</strong></h2>
+<p>本 CodeLab においては、API 仕様をもとに、Hello World API を作成します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\593dbbf4962642e4.png"></p>
+<h2 is-upgraded><strong>何を学ぶのか</strong></h2>
+<ul>
+<li>Studioへのログイン情報の設定</li>
+<li>Exchangeへ公開したAPI仕様をもとにしたAnypoint Studioによるプロジェクト作成方法</li>
+<li>API の設定および確認方法</li>
+</ul>
+<h2 is-upgraded><strong>必要条件</strong></h2>
+<ul>
+<li>Anypoint Platformへの<a href="https://anypoint.mulesoft.com/login/#/signup" target="_blank">ログインアカウント</a></li>
+<li>Anypoint Studioを<a href="https://www.mulesoft.com/lp/dl/studio" target="_blank">ダウンロード</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Anypoint Platform のログイン情報を Studio に追加する" duration="5">
+        <h2 is-upgraded><strong>Studioにログイン情報の設定</strong></h2>
+<p>Studio を開き、<strong>​[Anypoint Studio]</strong> &gt;<strong> [Preferences (プリファレンス)]</strong>​ をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\dba0decbfebe9e60.png"></p>
+<p><strong>[Anypoint Studio]</strong> &gt;<strong> [Authentication (認証)]​ </strong>を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\72bb55a8cbfa37f.png"></p>
+<p>Anypoint Platform のユーザ名とパスワードを入力</p>
+<p class="image-container"><img style="width: 366.00px" src="img\\a1653c12ffd8f15a.png"></p>
+<p><strong>[Sign In]</strong>​ をクリック</p>
+<p class="image-container"><img style="width: 362.00px" src="img\\7555709086b05956.png"></p>
+<p>サインインの成功後、<strong>[Apply and Close]​ </strong>をクリック。</p>
+<p>このログイン情報は、Studio の多くの操作で自動的に使用されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\23147989701ea58d.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="インポートした API 仕様で新しい Studio プロジェクトを作成する" duration="0">
+        <h2 is-upgraded><strong>プロジェクトを作成</strong></h2>
+<p>Studio で、<strong>[File] &gt; [New] &gt; [Mule Project]​ </strong>を選択</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\d1156a53808932e5.png"></p>
+<p>Project Name​: ​hello-world​</p>
+<p>Runtime​: 最新バージョンの Mule Runtime を選択(複数表示されている場合)</p>
+<p class="image-container"><img style="width: 620.00px" src="img\\a41b31098fc30672.png"></p>
+<p><strong>[Import a published API]</strong> タブを選択(初期状態で選択されている)</p>
+<h2 is-upgraded><img style="width: 604.00px" src="img\\2bf22fe4f9b2d22b.png"></h2>
+<p>緑のプラス記号をクリック</p>
+<p class="image-container"><img style="width: 604.00px" src="img\\2657d857e19dd697.png"></p>
+<p>hello-world​ を検索して選択</p>
+<p>検索ボックスに hello-world​ と入力</p>
+<p>検索結果として表示される​​hello-world​ をクリックして選択</p>
+<p><strong>​​[Add]​</strong> をクリックしhello-world API仕様を<strong> [Selected modules]​ </strong>リストに移動</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\a4abca9104abedc.png"></p>
+<p><strong>[Finish]​ </strong>をクリック</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\f983381d6fcfefbf.png"></p>
+<p>New Mule Project ダイアログを下にスクロールし<strong>[Scaffold flows from these API specifications]​ </strong>チェックボックスがオンであることを確認</p>
+<p>※この設定はデフォルトでチェックが入っております。</p>
+<p class="image-container"><img style="width: 618.00px" src="img\\ef0978813d79c5aa.png"></p>
+<p><strong>[Finish (完了)]​</strong> をクリック</p>
+<p class="image-container"><img style="width: 612.00px" src="img\\381d43859cc0c52d.png"></p>
+<h2 is-upgraded><strong>自動生成された雛形を確認</strong></h2>
+<p>キャンバスにに、自動で生成されたコンポーネント群が表示されます</p>
+<p>（スキャフォールディング）</p>
+<p>スクロールして、すべてのコンポーネントを確認します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\2825ee7ecbada68f.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\5fa27fe378c85d.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\36d9feff8b77cc55.png"></p>
+<h2 is-upgraded><strong>キャンバスの異なる3 つのビュー</strong></h2>
+<p>それぞれ、クリックして参照</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\f48ac5c20d8964db.png"></p>
+<h2 is-upgraded><strong>リスナに設定されている値を確認</strong></h2>
+<p>キャンバス内に表示されている<strong>[Listner(リスナ)]</strong>プロセッサをクリック</p>
+<p>下部に表示される設定パネル内の、<strong>[Consumer Configuration]</strong>の設定をおこないます</p>
+<p>右側に配置されている編集アイコンをクリック</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\1f61132fafc23218.png"></p>
+<p>ホストが 0.0.0.0​ でポートが 8081​ であることを確認</p>
+<p><strong>[Test Connection]​ </strong>をクリックし、接続テスト成功を確認し[<strong>OK]​ </strong>をクリック</p>
+<p><strong>[OK]</strong>をクリックしダイアログを閉じます</p>
+<p class="image-container"><img style="width: 572.00px" src="img\\65569af6ac071de5.png"></p>
+<p><strong> [Message Flow]​ </strong>タブをクリック</p>
+<p><strong>[Path (パス)]​ </strong>が /api/*​ に設定されていることを確認</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\c0487c6689c5e963.png"></p>
+<p><strong>[File] &gt; [Save All]​ </strong>をクリックし、作業内容を保存(必要に応じて)</p>
+<p class="image-container"><img style="width: 328.00px" src="img\\8ae8f450a5af558f.png"></p>
+<h2 is-upgraded><strong>API を設定する</strong></h2>
+<p>Studio から提供されたスキャフォールディングを使用し、​/greeting​ エンドポイントモジュールを設定して API を完成させます。</p>
+<p>キャンバスの [Message Flow]​ タブで、/greeting​ エンドポイントモジュールが表示されるまで下にスクロール</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\55f9600ea03a3580.png"></p>
+<p><strong>[Mule Palette]​ で [Favorites]​ </strong>をクリックし、コアコネクタのリストを表示</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4f854611b4d1eb9.png"></p>
+<p><strong>[Set Payload]​</strong> プロセッサをクリックして選択し、<strong>[Transform Message]</strong>プロセッサ の前にドラッグ</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\bb4eb55169a6d20b.png"></p>
+<p>フローに追加した <strong>[Set Payload]</strong>プロセッサをクリック</p>
+<p class="image-container"><img style="width: 298.00px" src="img\\918d3675f903726f.png"></p>
+<p><strong>[Set Payload]</strong>プロセッサの設定用パネルがウインドウ下部に表示されます</p>
+<p>パネルの左側にある <strong>[General]</strong>タブが選択されていることを確認し、<strong>[Settings]</strong>項目の<strong>[Value]</strong>フィールドに表示されている<strong> [fx]</strong>​ (関数) ボタンをクリックして選択解除</p>
+<p class="image-container"><img style="width: 596.00px" src="img\\4071b2f8683645a7.png"></p>
+<p><strong>[Value (値)]​ </strong>へ  Today the greeting is Hello.​   を設定</p>
+<p class="image-container"><img style="width: 594.00px" src="img\\ca680e7b5f42b348.png"></p>
+<p>次に、<strong>[Transform Message]</strong>プロセッサの設定を行います</p>
+<p>フローを作成するキャンバスに戻り、<strong>[Transform Message]</strong>プロセッサをクリック</p>
+<p>下部に表示されるパネルの右側に記述されている「&#34;todays-greeting&#34;: &#34;test-greeting&#34;」を削除</p>
+<p>※中括弧<strong>{ }</strong>は削除しないように注意ください</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\3adbe669570a8b6a.png"></p>
+<p>入力元の「<strong>Payload: String</strong>」と出力先の「<strong>today-greeting : String</strong>」をマウス操作で接続</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4337cb5608ea2f60.png"></p>
+<p>変換ロジックが下記の通り設定されていることを確認</p>
+<p>%dw 2.0</p>
+<p><strong>output application/json</strong></p>
+<p>---</p>
+<p>{</p>
+<p>        &#34;todays-greeting&#34;: payload</p>
+<p>}</p>
+<p><strong>[File] &gt; [Save All]​ </strong>をクリックし、作業内容を保存</p>
+<p class="image-container"><img style="width: 328.00px" src="img\\8821f4c36c0e0806.png"></p>
+<p>キャンバスの一番下にある <strong>[Configuration XML (設定 XML)]​</strong> をクリックし、作業で生成された XML を確認</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4c4d06d66ec65be2.png"></p>
+<p>キャンバスの下部にタブとして表示されている <strong>[Message Flow (メッセージフロー)]​ </strong>をクリック</p>
+<p>各コンポーネントが表示されている画面に戻ったことを確認</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\d8161eacd8444ec8.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="API をテストする" duration="0">
+        <h2 is-upgraded><strong>プロジェクトを実行</strong></h2>
+<p>キャンバス上の任意の場所を右クリックして、<strong>[Run project hello-world (プロジェクト hello-world を実行)]​ </strong>を選択</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\6154c0e9c4071188.png"></p>
+<p>次のメッセージが表示されれば、API を含むアプリケーションが Mule にデプロイ完了</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\651f99d4411d1cfb.png"></p>
+<p>Advanced Rest クライアント) を開いて GET 要求を送信</p>
+<p><a href="http://localhost:8081/api/greeting" target="_blank">http://localhost:8081/api/greeting</a></p>
+<p>レスポンスコード 200 と、応答メッセージを確認</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\5e223228f3875858.png"></p>
+<h2 is-upgraded><strong>プロジェクトを停止</strong></h2>
+<p>キャンバス内を右クリックし、<strong>[Stop project hello-world]​ </strong>を選択</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\51d9eca582e41bbc.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="まとめ" duration="0">
+        <p>Anypoint Platform では、​Mule Runtime Engine (Mule)​ のインスタンスにデプロイするアプリケーションに API をパッケージします。 Mule は、Mule アプリケーションを実行する軽量のインテグレーションエンジンです。Mule のインスタンスは、Studio と、Mule アプリケーションおよび API をデプロイする環境に埋め込まれます。 これらの環境は対象と呼ばれます。対象の 1 つは Studio に埋め込まれる Mule で、開発とテストに使用します。もう 1 つの対象は ​CloudHub​ で、MuleSoft によって管理されるクラウドベースの環境です。</p>
+<h2 is-upgraded><strong>What&#39;s next?</strong></h2>
+<p><a href="https://codelab-jpn-site.herokuapp.com/codelabs/basic-tutorial-api-deploy-to-cloudhub/index.html" target="_blank">次のガイド</a>へ進み、完成したAPIをCloudHubへデプロイをしてみましょう。</p>
+<h2 is-upgraded><strong>Reference docs</strong></h2>
+<ul>
+<li><a href="https://docs.mulesoft.com/jp/general/api-led-overview" target="_blank">チュートリアル: API ビルドの最初から最後まで</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

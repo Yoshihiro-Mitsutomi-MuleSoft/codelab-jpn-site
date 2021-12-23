@@ -1,0 +1,246 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>[BT3] CloudHub への API のデプロイ</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-172158109-1"
+                  id="basic-tutorial-api-deploy-to-cloudhub"
+                  title="[BT3] CloudHub への API のデプロイ"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="はじめに" duration="0">
+        <p><strong>Last Updated:</strong> 2021-12-23</p>
+<h2 is-upgraded><strong>概要</strong></h2>
+<p>前のガイドでは、新規 API を含む Mule アプリケーションを Studio で作成して、動作確認を実施いたしました。</p>
+<p>当ガイドでは、 API を CloudHub にデプロイし、クラウド上で稼働させる手順を行います。まず、Exchange から API をテストできるようにするために API プロキシを作成します。その後、API をサービス拒否攻撃から保護するためのレート制限ポリシーをセットアップします。</p>
+<h2 is-upgraded><strong>何を作成するのか</strong></h2>
+<p>本 CodeLab においては、作成したAPIをCloudHubへデプロイして稼働させ、APIに対するポリシーを定義します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\b3ceb2c311429373.png"></p>
+<h2 is-upgraded><strong>何を学ぶのか</strong></h2>
+<ul>
+<li>API を CloudHub にデプロイする方法</li>
+<li>API をAPI Managerに追加する方法</li>
+<li>API プロキシの作成と設定方法</li>
+<li>レート制限ポリシーの追加方法</li>
+</ul>
+<h2 is-upgraded><strong>必要条件</strong></h2>
+<ul>
+<li>Anypoint Platformへの<a href="https://anypoint.mulesoft.com/login/#/signup" target="_blank">ログインアカウント</a></li>
+<li>Anypoint Studioを<a href="https://www.mulesoft.com/lp/dl/studio" target="_blank">ダウンロード</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="API を CloudHub にデプロイ" duration="5">
+        <h2 is-upgraded><strong>Anypoint Studioからデプロイ</strong></h2>
+<p>Anypoint StudioのPackage Explorer で hello-world​ プロジェクトを右クリックして</p>
+<p><strong> [Anypoint Platform] &gt; [Deploy to CloudHub]​ </strong>を選択</p>
+<p>（Package Exploreが表示されていない場合は、上部に表示されているメニューにて[Window] - [Perspective] - [Open Perspective] で<strong> [Mule Design] </strong>パースペクティブに切り替えます。）</p>
+<p class="image-container"><img style="width: 438.00px" src="img\\cc0f922aa280456b.png"></p>
+<p>選択すると、別ウインドウにて、Anypoint Platformの画面が表示されます。</p>
+<p>デプロイ先については、Anypoint Stdioにて設定したアカウントの Sandbox で作業を行う必要があります。</p>
+<p>画面の左上に表示されている現環境が<strong>[Sandbox]​ </strong>ではなく<strong> [Design (デザイン)]​</strong> と表示されている場合は以下の手順を実行してください。</p>
+<ol type="1" start="1">
+<li><strong>[Design]​ </strong>をクリックして <strong>[Switch Environment]</strong> ダイアログを表示</li>
+<li><strong>[Sandbox]​ </strong>をクリック</li>
+<li><strong>[Switch]</strong>​ をクリック</li>
+</ol>
+<p class="image-container"><img style="width: 624.00px" src="img\\70b82f259f4cc783.png"></p>
+<h2 is-upgraded><strong>API 名を設定</strong></h2>
+<p><strong>[Deploying Application]</strong>と表示されているフィールドに任意のアプリケーション名を入力します。</p>
+<p>ただし、すべてのアプリケーション名と API 名は CloudHub 全体で一意である必要があるため、固有名称となるようにしてください。例では、hello-world-greeting-yukimitsu-kurozumi​ を使用します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\be2e266b8ff200cb.png"></p>
+<p><strong>[Deployment Target]​</strong> が CloudHub​ であることを確認します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\14219c53062a0332.png"></p>
+<p><strong>[Deploy Application]​</strong> をクリックすると、少し時間が経過したのち、デプロイメントの状況がウィンドウに表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\f60b0e97f0abc5de.png"></p>
+<p><strong>[Open in Browser]​ </strong>をクリックし、Runtime Manager で表示される状況を確認</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\b5583c57f9eb011c.png"></p>
+<p>Anypoint Platform RuntimeManagerに表示されているデプロイ済のアプリケーションを確認します。</p>
+<p>Status欄に表示されている状態を確認後、 <strong>[Started]​ </strong>をクリックして​アプリケーションの URL を表示します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4a1dcc19497337a3.png"></p>
+<p>表示されたURLの値をコピーします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\be3a39890cb9259c.png"></p>
+<p>表示されたURLの値をコピーし、API仕様にて定義した<strong> /api/greeting</strong>  を末尾に追加します。</p>
+<p>http://hello-world-greeting-yukimitsu-kurozumi-ec2.cloudhub.io<strong>/api/greeting</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\94fdbd9c04780bd9.png"></p>
+<h2 is-upgraded><strong>結果確認</strong></h2>
+<p>HTTPのリクエストを発行して、結果を確認します。</p>
+<p>200 OK と指定した挨拶文の Today the greeting is Hello.​ が表示されれば、作成した API は正常にデプロイされています。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\94fdbd9c04780bd9.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="API プロキシアプリケーションを作成する" duration="0">
+        <p>デプロイしたAPIにレート制限ポリシーを追加していきます。</p>
+<p>まずは、ポリシーを制御するためのAPIプロキシを作成します。</p>
+<h2 is-upgraded><strong>API Managerを表示</strong></h2>
+<p>Anypoint Platform にログインして、<strong>[API Manager]</strong>をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\89b8363fe4c4591a.png"></p>
+<p>Sandbox 環境に切り替えます(オプション)</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\ec566b220e86079a.png"></p>
+<p><strong>[Manage API] &gt; [Manage API from Exchange]​ </strong>をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\b6e3398c677f1583.png"></p>
+<p>hello​ と入力してドロップダウンから hello-world​ を選択します。</p>
+<p>ここでは、hello-world-greeting​ というデプロイ済みアプリケーションではなく、API 仕様についての設定となりますので、仕様名であるhello-worldがリストとして表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\7ba230f7bd77bce8.png"></p>
+<h2 is-upgraded><strong>値の確認</strong></h2>
+<p>Hello-world​が、以下の値が選択されていることを確認します</p>
+<p>Asset type (アセットタイプ): RAML/OAS​</p>
+<p>API version (API バージョン): v1​</p>
+<p>Asset version (アセットバージョン): 1.0.0</p>
+<p>Managing type (管理種別): Endpoint with Proxy (プロキシを使用したエンドポイント)​</p>
+<p>Proxy deployment target (プロキシデプロイメント対象): CloudHub​</p>
+<p>Mule version (Mule バージョン):​ [Mule 4] のチェックボックスがオン</p>
+<p>Implementation URI (実装 URI): ​http://hello-world-greeting-xx-xx.us-e2.cloudhub.io/api </p>
+<p>ステップ 1 の​アプリケーション URL に /api​ を付加したものと同じです。</p>
+<p>Path (パス): ​ /*</p>
+<p>詳細オプションは無視します。</p>
+<p>[Save (保存)]​ をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\7a6b21774d17f1d0.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="API プロキシの設定" duration="0">
+        <p>Anypoint Platform にログインします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\b3ceb2c311429373.png"></p>
+<p><strong>[API Manager]​ </strong>をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\b289039a95fb0464.png"></p>
+<p>API Nameで作成したhello-worldをクリックしてプロキシ設定ページを表示します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\53ffa37e8c3d5965.png"></p>
+<p>一番上のセクションで以下を実行します。</p>
+<p><strong>[Add a label (表示ラベルを追加)]</strong>​ をクリックします。</p>
+<p><strong>No policy​</strong> と入力し、Return を押して表示ラベルを保存します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4c27f90d065fc421.png"></p>
+<p><strong>[Deployment Configuration]</strong> セクションで以下を実行します。</p>
+<p><strong>[Runtime version]</strong>  一番新しいバージョンを選択します。</p>
+<p><strong>[Proxy application name ]</strong>:​ hello-world-greeting-proxy​-&lt;名&gt;-&lt;姓&gt; を入力値</p>
+<p><strong>[Update application if exists]​ </strong>を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\af52ce109a8e2323.png"></p>
+<p><strong>[Deploy]</strong>​ をクリックします。.進行状況ウィンドウが表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4fa553169cab6937.png"></p>
+<p>デプロイが完了したら、進行状況ウィンドウを閉じて設定ページに戻ります。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\51cffe1376edb17d.png"></p>
+<p>[Proxy]​ セクションで、<strong>[Proxy URL]​ </strong>の後にあるリンクを右クリックして、リンクをコピーします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\be8b42e45c7107db.png"></p>
+<p>ページの一番上で<strong> [Add consumer endpoint]</strong>​ をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\55d1ecb53ca75614.png"></p>
+<p>コピーしてあるリンクを貼り付け、Return を押してリンクを保存します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\ce3b1fa90c68fb8d.png"></p>
+<p><strong>[View API in Exchange]</strong>​ をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\164817907a10957f.png"></p>
+<p><strong>[API instances]​</strong> をクリックします。. モッキングサービスバージョンと、今 Sandbox 環境で作成した新しいプロキシが<strong>「No policy」</strong>の表示ラベルと共に表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\9fb778c5e7c8d4ae.png"></p>
+<p>左側で<strong> /greeting​ </strong>をクリックして開き、<strong>[GET]​ </strong>をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\5478adf913c9643b.png"></p>
+<p>右側で、列の一番上の方にある<strong> [Mocking Service]​ </strong>をクリックしてドロップダウンメニューを開きます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\29acf91bd5324f60.png"></p>
+<p>[Sandbox: No policy]​ インスタンスを選択します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\89d3dd334dd9affa.png"></p>
+<p><strong>[Send (送信)]​</strong> をクリックします。. 応答が 200 OK​ で挨拶文が Today the greeting is Hello.​ であることを確認してください。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4f65228ef55b3dff.png"></p>
+<p><strong>[API instances]​</strong> をクリックして Exchange の API インスタンスのリストに戻ります。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\44dfa967ba975067.png"></p>
+<p><strong>No policy </strong>の API を選択します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\c31bdb3030e03678.png"></p>
+<p><strong>[Private]​ </strong>と表示されているリストボックスをクリックして、<strong> [Public]​ </strong>を選択し、Exchange内で他ユーザが参照可能にします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\4e6ce7f97e0f2c16.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="レート制限ポリシーを追加する" duration="0">
+        <h2 is-upgraded><strong>レート制限ポリシーの追加手順</strong></h2>
+<p>Anypoint PlatformでAPI Manager を表示します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\b3d74d23b5ed881b.png"></p>
+<p>hello-world​ をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\833aa2246043b148.png"></p>
+<p>左側のナビゲーションで<strong> [Policies]​ </strong>を選択します</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\dd9da2c893c71fbb.png"></p>
+<p><strong>[Apply New Policy]​ </strong>をクリックします</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\a8bd644a5d973042.png"></p>
+<p>デフォルトの<strong> [All Mule Versions]​ </strong>は変更しないでください</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\6059147bc1fa280f.png"></p>
+<p>スクロールして<strong> [Rate limiting]</strong>​ を探します ([Rate limiting - SLA based]​ ではありません)。</p>
+<p class="image-container"><img style="width: 568.00px" src="img\\87c06504a7576277.png"></p>
+<p><strong>[Rate limiting]​ </strong>をクリックし、1.3.3​ を選択して <strong>[Configure Policy]​</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 572.00px" src="img\\108a34c9b05710b3.png"></p>
+<p><strong>[Apply Rate limiting policy (レート制限ポリシーを適用)]</strong> ページで、次の制限値を設定します。</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p># of Reqs (要求数)</p>
+</td><td colspan="1" rowspan="1"><p>3</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Time Period (期間)​</p>
+</td><td colspan="1" rowspan="1"><p>1</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Time Unit (時間単位)​</p>
+</td><td colspan="1" rowspan="1"><p>Minute (分)</p>
+</td></tr>
+</table>
+<p class="image-container"><img style="width: 624.00px" src="img\\e445384221bc5b78.png"></p>
+<p><strong>[Expose Headers]​ </strong>を選択します。</p>
+<p class="image-container"><img style="width: 498.00px" src="img\\3ece3fc95c8ff120.png"></p>
+<p>[Method &amp; Resource conditions]​: ​には</p>
+<p><strong> [Apply configurations to all API methods &amp; resources]​ </strong>を選択します。</p>
+<p class="image-container"><img style="width: 490.00px" src="img\\a4b48ab6c45d1247.png"></p>
+<p><strong>[Apply]​ </strong>をクリックします</p>
+<p class="image-container"><img style="width: 482.00px" src="img\\ca2c762ab2d99ae8.png"></p>
+<p><strong>[Policies (ポリシー)]</strong> ホームページに新しいポリシーが表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\891517cea7fa92c1.png"></p>
+<h2 is-upgraded><strong>API インスタンスの表示ラベルを変更</strong></h2>
+<p><strong>[Settings (設定)]​</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\984b2d11e8a840a7.png"></p>
+<p>[Label]​ の隣にある鉛筆アイコンをクリックして、値を Rate-limiting policy​ に変更します。</p>
+<h2 is-upgraded><strong>新しいポリシーをテスト</strong></h2>
+<p>Advanced Rest クライアントで、<strong>429 Too Many Requests</strong>​ が返されるまで GET 要求を該当 API プロキシに繰り返し送信します。</p>
+<p>http://(コンシューマエンドポイント)/greeting​ </p>
+<p class="image-container"><img style="width: 624.00px" src="img\\7bb338d6d4d93976.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="まとめ" duration="0">
+        <p>Anypoint Platform では、​APIを開発するだけではなく、管理、運用、監視、共有を可能としているため、APIの一連のライフサイクルマネージメントを提供することが可能となります。</p>
+<h2 is-upgraded><strong>What&#39;s next?</strong></h2>
+<p>ここまで進めてこられたみなさんは、Anypoint Platformの概要が理解できたことと思います。より深く学ぶための資料は以下のリンクで公開されていますので、ぜひご活用ください。</p>
+<h2 is-upgraded><strong>Reference docs</strong></h2>
+<ul>
+<li><a href="https://docs.mulesoft.com/jp/general/api-led-overview" target="_blank">チュートリアル: API ビルドの最初から最後まで</a></li>
+<li><a href="https://docs.mulesoft.com/jp/general/" target="_blank">MuleSoftドキュメント</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

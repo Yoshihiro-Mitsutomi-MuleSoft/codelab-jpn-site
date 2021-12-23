@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-12-23T01:22:59Z",
+  "id": "basic-tutorial-api-deploy-to-cloudhub",
+  "duration": 5,
+  "title": "[BT3] CloudHub への API のデプロイ",
+  "authors": "Soichiro Anzai",
+  "summary": "このガイドでは、新しい API を含む Mule アプリケーションを Studio で作成してテストしましたので、次は API を CloudHub にデプロイしましょう。まず、Exchange から API をテストできるようにするために API プロキシを作成します。その後、API をサービス拒否攻撃から保護するためのレート制限ポリシーをセットアップします。",
+  "source": "171fbW_KBo-MsGoVQ8-gsBaikVvVgaDc9p4QQs9Szcro",
+  "theme": "basictutorial",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "basictutorial"
+  ],
+  "tags": [
+    "tutorial"
+  ],
+  "ga": "UA-172158109-1",
+  "url": "basic-tutorial-api-deploy-to-cloudhub"
+}
