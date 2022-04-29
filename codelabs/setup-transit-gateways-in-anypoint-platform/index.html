@@ -1,0 +1,196 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Transit Gateways のセットアップ</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="setup-transit-gateways-in-anypoint-platform"
+                  title="Transit Gateways のセットアップ"
+                  environment="web"
+                  feedback-link="https://github.com/Yoshihiro-Mitsutomi-MuleSoft/codelab-jpn-site/issues">
+    
+      <google-codelab-step label="はじめに" duration="1">
+        <p>Amazon AWS Transit Gateway は VPC と On premise ネットワークとの間の接続を central hub 形式で実装するための技術です。これにより数多におよぶ 1:1 の接続を行っていた従来の形式から、全体構成の簡略化が可能となります。本機能は cloud router のようなかたちで機能するため、新規接続を行う際はこちらの router へ単一の接続を張るのみとなります。</p>
+<p>本 codelab においては MuleSoft Anypoint Platform に追加された CloudHub VPC と貴社契約 AWS における VPC 関連資源との間を Transit Gateways を通じてつなぐ手順を確認します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/871916f0bb255d01.png"></p>
+<h2 is-upgraded><strong>Requirements / Prerequisites</strong></h2>
+<ul>
+<li>Anypoint Platform</li>
+<li>Anypoint VPC</li>
+<li>Anypoint VPN(ライセンス契約上、こちらの entitlement が必要となります。)</li>
+<li>Amazon Web Services</li>
+</ul>
+<h2 is-upgraded><strong>Additional Resources</strong></h2>
+<ul>
+<li><a href="https://aws.amazon.com/transit-gateway" target="_blank">AWS Transit Gateway</a></li>
+</ul>
+<aside class="warning"><p><strong>Note: </strong>本 Codelab における各種 screenshot イメージは本稿執筆時点のものであり、UI は変更される可能性があります。もし UI が異なる場合は適宜最新の UI で意味を置き換えつつ手順をご確認してください。 </p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="AWS - Transit Gateway の作成" duration="1">
+        <p>まずは、AWS 上で Transit Gateway を作成します。もし Transit Gateway が AWS 上でセットアップ済みであれば <strong>Next</strong> をクリックの上、次章へ進んでください。<br><br>AWS console にログインします。</p>
+<p><strong>Networking &amp; Content Delivery</strong> セクションへナビゲートの上、<strong>VPC</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7e3eb5a5c5434a01.png"></p>
+<p>VPC Management Console にてスクロールダウンします。</p>
+<p>左側のナビゲーションバーにて <strong>Transit Gateways</strong> が表れましたらクリックします。</p>
+<p class="image-container"><img style="width: 541.00px" src="img/aa8f0d9e4ae82ed2.png"></p>
+<p><strong>Create Transit Gateway</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 597.00px" src="img/76b66730907cd951.png"></p>
+<p><strong>Name tag</strong> 並びに <strong>Description</strong> 欄に適切な値を入力後、<strong>Create Transit Gateway</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/d75d7173a572d254.png"></p>
+<p>Transit Gateway が作成されると下記のようなイメージが返されます。</p>
+<p>続いて <strong>Close</strong> ボタンを押下してください。（AWS Console そのものは以降の工程で利用するため開いた状態にしておきます。）</p>
+<p class="image-container"><img style="width: 624.00px" src="img/d7edab0a10330ccd.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Anypoint Platform - Transit Gateways の追加" duration="1">
+        <p><strong>Anypoint Platform</strong> へログインします。</p>
+<p><strong>Runtime Manager</strong> へナビゲートします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ac22fdb8ba4648ae.png"></p>
+<p>VPC が構成済みで且つ Transit Gateways の entitlement をお持ちの場合は左側のナビゲーションバーに下図のようなかたちで Transit Gateways が表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/60dc7fc73516cac9.png"></p>
+<p><strong>Add transit gateway</strong> ボタンを押下します。</p>
+<p>続いて <strong>I&#39;m ready</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/1ce10e476fcab788.png"></p>
+<p>Name 欄に AWS で設定した Transit Gateway と同じ名前を入力します。</p>
+<p>同様に Region 欄も AWS の設定内容と合わせます。</p>
+<p><strong>Next</strong> ボタンを押下します。 </p>
+<aside class="special"><p>Note: AWS Transit Gateway へ接続する CloudHub VPC は AWS Transit Gateway が稼働する Region と合わせます。</p>
+</aside>
+<p class="image-container"><img style="width: 624.00px" src="img/1cd5cfbedf7ad31d.png"></p>
+<p>続いて <strong>Create Resource Share page</strong> リンクを右クリックの上、下図の要領で新規タブでリンク先を開きます。（Anypoint Platform の画面を維持します。ご利用されるブラウザにより右クリック後の表示イメージは異なります。）</p>
+<p class="image-container"><img style="width: 624.00px" src="img/b459a328e5a31566.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="AWS - Resource Share の作成" duration="1">
+        <p><strong>Resource Access Manager</strong> 画面にて resource share を作成します。</p>
+<p>適切な resource share 名を <strong>Description</strong> 中の <strong>Name</strong> 欄に入力します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/c74a5d2914d1ed.png"></p>
+<p><strong>Resources</strong> セクションをスクロールダウンし <strong>Transit Gateways</strong> を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/57ee65d6495ac382.png"></p>
+<p>続いて <strong>Principals </strong>セクションまでスクロールダウンします。</p>
+<p>同セクションにて MuleSoft の AWS Account ID をコピー＆ペーストの上 <strong>Add </strong>ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/cc3de4cc86b30459.png"></p>
+<aside class="special"><p>Note: MuleSoft の AWS account ID はご利用中の Control Plane の Region により異なります。(US / EU).</p>
+</aside>
+<p>画面下までスクロールダウンし、<strong>Create resource share</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 619.00px" src="img/b73c153703bf4b34.png"></p>
+<p>AWS Console は以降の手順で利用するため、開いたままとしておきます。</p>
+<p>次章では Anypoint Platform のコンソールを利用します。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Anypoint Platform - Transit Gateway への接続" duration="1">
+        <p>Anypoint Platform のコンソールへ戻ります。</p>
+<p><strong>Next</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/2aeee2d0e97f7001.png"></p>
+<p>AWS Resource share より ID 並びに Owner の値をコピーし、Anypoint Platform 上でペーストします。</p>
+<p>続いて <strong>Add</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/54f963578bad31cf.png"></p>
+<p>接続が完了しますと下図のような Transit Gateway の詳細情報が表示された画面へ遷移します。</p>
+<p>続いて CloudHub VPC と Transit Gateway の接続を行います。</p>
+<p><strong>Attach VPC</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/847cc72dd138c396.png"></p>
+<p><strong>Select VPC</strong> ダイヤログ画面にて実行中の Environment に紐づいた VPC がリストされます。</p>
+<p>接続対象の VPC を選択の上 <strong>Next</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/19b2a67ac4ad88c7.png"></p>
+<p>次章では Resource Share における手順のと同様に AWS Console へ行き VPC と Transit Gateway との接続を許可します。</p>
+<p><strong>Transit Gateway Attachments page</strong> リンクを右クリックし、Anypoint Platform のコンソールを開いた状態を維持しつつリンク先を開きます。<br></p>
+<p class="image-container"><img style="width: 624.00px" src="img/b6362e569cdff82a.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="AWS - VPC Attachment の許可" duration="1">
+        <p>AWS Console にて <strong>VPC &gt; Transit Gateways </strong>配下の <strong>Transit Gateway Attachments</strong> セクションへナビゲートします。</p>
+<p>表示された画面にて Anypoint Platform にて作成した Attachment を選択します。</p>
+<p><strong>State</strong> 欄が <strong>pending acceptance</strong> となっていることを確認します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f63b8b5b02fbc48d.png"></p>
+<p><strong>Actions </strong>ドロップダウンから <strong>Accept</strong> を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a7e3cb148c1886e0.png"></p>
+<p>ポップアップウィンドウにて <strong>Accept</strong> ボタンを押下します。</p>
+<p class="image-container"><img alt="Graphical user interface, text, application, email  Description automatically generated" style="width: 624.00px" src="img/5e48b965a8e0adb.png"></p>
+<p>Anypoint Platform のコンソールに戻り数分待ってから画面の再読み込みを行います。</p>
+<p>下図のようなかたちで Attachment が成功した旨のメッセージが表示されていることを確認します。</p>
+<p>本画面においては VPC のルーティング情報も表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4e9a93c0da2886fd.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Anypoint Platform - Route の追加" duration="1">
+        <p>VPC 間のルーティングを行うべく Route の構成をおこないます。</p>
+<p><strong>Add Route</strong> をクリックします。</p>
+<p class="image-container"><img style="width: 229.00px" src="img/860c28fc5bb99818.png"></p>
+<p><strong>Subnet</strong> 欄にて AWS VPC の CIDR 範囲を入力の上、<strong>Add route</strong> ボタンを押下します。<img style="width: 573.00px" src="img/31dd2017f6874a02.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="AWS - Route の追加" duration="1">
+        <p>AWS - CloudHub 間の通信を行うべく AWS 上でも同様の設定を行います。</p>
+<p>AWS コンソールにおける VPC 設定画面にて <strong>Route Tables</strong> をクリックの上、対象 VPC に紐づくルートテーブルを選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/5cfec1d7fdeea06e.png"></p>
+<p>画面下部の <strong>Routes </strong>タブにて <strong>Edit routes</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/76a41ef08304544b.png"></p>
+<p><strong>Add route</strong> をクリックの上、CloudHub VPC の CIDR 範囲を入力します。</p>
+<p><strong>Target</strong> ドロップダウンにて作成した Transit Gateway を選択します。</p>
+<p><strong>Save changes</strong> ボタンを押下します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/be3b55e8aa46fa37.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="接続の確認" duration="1">
+        <p><a href="https://help.mulesoft.com/s/article/How-To-Use-Network-Tools-Application" target="_blank">こちらの記事</a>より、Network Tools application(net-tools-v2.3.0.jar)をダウンロードの上、</p>
+<p>CloudHub へデプロイします。</p>
+<p>記事の内容に従い、CloudHub VPC と AWS VPC の間の接続性の確認を行います。</p>
+<p>本ツールの利用にあたり、AWS VPC 上にて EC2 を起動する必要があります。</p>
+<p>全て正しく構成されている場合、下図のようなかたちで ping が正しく処理されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f682155f4a5275ea.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="まとめ" duration="1">
+        <p>ご覧いただきましたように Anypoint Platform における Transit Gateway の構成はシンプルです。この新機能により多量の 1:1 関係の接続により複雑化したネットワーク構成の簡略化が可能となります。</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-04-29T12:29:52Z",
+  "id": "setup-transit-gateways-in-anypoint-platform",
+  "duration": 10,
+  "title": "Transit Gateways のセットアップ",
+  "authors": "Yoshihiro Mitsutomi",
+  "summary": "本 codelab では Anypoint Platform 上における Transit Gateway のセットアップ手順をハンズオン形式で見ていきます。",
+  "source": "1-UoLq8kUSylayiz9y--MurcOZM87J3sJcyRMy6D_vkc",
+  "theme": "network",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "network"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/Yoshihiro-Mitsutomi-MuleSoft/codelab-jpn-site/issues",
+  "url": "setup-transit-gateways-in-anypoint-platform"
+}

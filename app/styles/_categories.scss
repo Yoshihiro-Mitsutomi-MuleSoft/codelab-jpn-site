@@ -89,3 +89,6 @@ $color-google-green, 'mongodb.svg');
 
 @include codelab-card(['basictutorial'],
   $color-google-blue, 'basic.svg');
+
+  @include codelab-card(['network'],
+  $color-google-blue, 'network.png');
