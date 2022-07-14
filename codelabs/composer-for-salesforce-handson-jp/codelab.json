@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-07-14T05:52:05Z",
+  "id": "composer-for-salesforce-handson-jp",
+  "duration": 0,
+  "title": "MuleSoft Composer for Salesforce ハンズオン",
+  "authors": "Takehiko Isono",
+  "summary": "Composer for Salesforce ハンズオン",
+  "source": "1XQolTD-S411hpvNccEp3wEyLDCtgTc6QEv9fXExD-3o",
+  "theme": "composer",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "composer"
+  ],
+  "tags": [
+    "composerforsalesforce"
+  ],
+  "feedback": "https://docs.google.com/forms/d/e/1FAIpQLScVaeTQSQ0FfBO_b2GPc47hiJIJTxQnl6FQAVubWtBD_FbGSg/viewform?usp=pp_url\u0026entry.530463766=composer-for-salesforce-handson-jp",
+  "ga": "{{labAnalytics}}",
+  "url": "composer-for-salesforce-handson-jp"
+}

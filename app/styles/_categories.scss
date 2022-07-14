@@ -21,6 +21,7 @@ $color-google-red:  #ea4335;
 $color-google-yellow:  #fbbc05;
 $color-google-green:  #34a853;
 $color-google-grey:  #9aa0a6;
+$color-google-light-blue:  #3498DB;
 
 /* Other colors */
 $color-odata-orange: #ed8e24;
@@ -90,5 +91,8 @@ $color-google-green, 'mongodb.svg');
 @include codelab-card(['basictutorial'],
   $color-google-blue, 'basic.svg');
 
-  @include codelab-card(['network'],
+@include codelab-card(['network'],
   $color-google-blue, 'network.png');
+
+@include codelab-card(['composer'],
+  $color-google-light-blue, 'fast.png');

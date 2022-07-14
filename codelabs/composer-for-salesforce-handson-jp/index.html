@@ -1,0 +1,262 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>MuleSoft Composer for Salesforce ハンズオン</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="{{labAnalytics}}"
+                  id="composer-for-salesforce-handson-jp"
+                  title="MuleSoft Composer for Salesforce ハンズオン"
+                  environment="web"
+                  feedback-link="https://docs.google.com/forms/d/e/1FAIpQLScVaeTQSQ0FfBO_b2GPc47hiJIJTxQnl6FQAVubWtBD_FbGSg/viewform?usp=pp_url&amp;entry.530463766=composer-for-salesforce-handson-jp">
+    
+      <google-codelab-step label="ハンズオンの流れ" duration="0">
+        <h2 is-upgraded>このハンズオンでは、MuleSoft Composer for Salesforceを利用し、下記のユースケースの実装を行います。</h2>
+<h2 is-upgraded>ユースケース</h2>
+<p>Salesforce上の商談で、「フェーズ」項目が受注（Closed Won）となったものについて、商談レコード内の「説明」項目にタイムスタンプを追記する。</p>
+<h2 is-upgraded>目次</h2>
+<ol type="1" start="1">
+<li>MuleSoft Composerの起動</li>
+<li>フローの作成</li>
+<li>トリガー</li>
+<li>接続</li>
+<li>トリガー内容の設定</li>
+<li>ステップ</li>
+<li>テスト</li>
+<li>有効化（Activation）</li>
+<li>フロー一覧画面</li>
+<li>フロー実行履歴表示</li>
+<li>参考リソース</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="MuleSoft Composerの起動" duration="0">
+        <h2 is-upgraded>１．Salesforceにログインします。</h2>
+<h2 is-upgraded>２．MuleSoft Composer for Salesforceを起動します。</h2>
+<p><br>        左上のメニューでMuleSoft Composerを検索し、起動します。<br>        <img style="width: 462.00px" src="img/11257343ba1d8f92.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="フローの作成" duration="0">
+        <h2 is-upgraded>１．フローを作成する（フロー作成する2つの方法）</h2>
+<p>方法① 右上の「Create New Flow」を押す。</p>
+<p class="image-container"><img style="width: 380.00px" src="img/71da497253626d05.png"></p>
+<p>方法② 「Composer Flow」タブを選択後、右上の「New Flow」を押す。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/1d8778288e928d68.png"></p>
+<h2 is-upgraded>２．フローに名前を付ける</h2>
+<p>        左上、Untitled Flowの右側にあるペンマークをクリックし、フロー名を付けます。</p>
+<p>        ＊日本語は利用できません。</p>
+<p class="image-container"><img style="width: 539.00px" src="img/3af24ffe7ebd554d.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="トリガー" duration="0">
+        <h2 is-upgraded>１．スケジューラーステップを確認する</h2>
+<p>フロー作成の最初は、フローの起動条件であるトリガーの指定となります。</p>
+<p>スケジューラーによる定期実行または、各コネクターの持つトリガーによる起動を行うことができます。（トリガーを持たないコネクターもあります。）</p>
+<p class="image-container"><img style="width: 593.00px" src="img/34f3db3d24f8d05c.png"></p>
+<p>ここでは、まず、スケジュール実行を確認します。少し下にスクロールして「Scheduler」を選択してください。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f004af9285556bf1.png"></p>
+<p>Schedulerステップが配置され、ドロップダウンリストを展開すると、期間の選択が出来ます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/bd118f141a30c3e.png"></p>
+<h2 is-upgraded>２．ステップを削除する</h2>
+<p>一旦、Schedulerステップを削除します。</p>
+<p>ステップ右上のメニューを開き、「Delete Step」を選択します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ccc07550ab4c0881.png"></p>
+<h2 is-upgraded>３．Salesforceトリガーを選択する</h2>
+<p>「Salesforce」を選択します。次のセクションで接続を設定していきます。</p>
+<p class="image-container"><img style="width: 528.00px" src="img/92f4f4fab32bc453.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="接続" duration="0">
+        <h2 is-upgraded>１．Salesforce接続を作成する</h2>
+<p>まず、接続に対し名前を付けます。</p>
+<p>Composerでは、複数のSalesforce組織との接続が可能であり、異なる接続名を付けることで接続先を判断できるようにします。</p>
+<p class="image-container"><img style="width: 580.00px" src="img/5c000fa7c386be8e.png"></p>
+<p>接続したいSalesforce組織にログインします。</p>
+<p class="image-container"><img style="width: 610.00px" src="img/a26ce553c5031f50.png"></p>
+<p>MuleSoft Composerによるアクセスを許可します。</p>
+<p class="image-container"><img style="width: 607.00px" src="img/7a3e99ba58e6447e.png"></p>
+<h2 is-upgraded>２．接続の変更方法を確認する</h2>
+<p>接続先は、トリガーステップの右上メニューから変更することが出来ます。また、新規に接続を作成する事が出来ます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7d4b9f3a730dbb1e.png"></p>
+<p class="image-container"><img style="width: 541.00px" src="img/49708ba9f0e4d078.png"></p>
+<p>一旦キャンセルして、次に進んでください。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="トリガー内容の設定" duration="0">
+        <h2 is-upgraded>１．Salesforceトリガーを設定する</h2>
+<p>Salesforceトリガ―の場合は、下記の３つの条件を利用することが出来ます。</p>
+<ul>
+<li>New record（レコードの新規作成時）</li>
+<li>New or updated record（レコードの新規作成またはレコードの更新時）</li>
+<li>Deleted record（レコードの削除時）</li>
+</ul>
+<p class="image-container"><img style="width: 624.00px" src="img/fdeab12de8920f10.png"></p>
+<p>ここでは、「New or updated record」を選択します。</p>
+<p>次に、対象となるオブジェクトを指定します。</p>
+<p>Object Typeに「商談」と入力すると候補が出てきますので、<strong>リストから選択</strong>してください。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/961237d67c0bff90.png"></p>
+<p>次に、このフローで利用する項目を選択していきます。「Select Fields」を選択してください。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/cca7ebbc1df4d254.png"></p>
+<p>検索しながら、利用したい項目に✔を入れ、最後に「Add」を押します。</p>
+<p>ここでは、<strong>商談ID、商談名、フェーズ、説明を選択</strong>します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/38d942431ea1e1d.png"></p>
+<p>次のように、選択した項目数と、右側には選択した項目およびその項目のサンプルデータが表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/75e8cbdf93273eb2.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="ステップ" duration="0">
+        <p>フローの処理を実装していきます。</p>
+<p>トリガーの下にある「＋」マークをクリックしてください。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a9b946a842ad1302.png"></p>
+<p>スクロールすると、各コネクターに加え、「IF/Else Block」と「For Each」という処理が選択できることが分かります。</p>
+<p class="image-container"><img style="width: 583.00px" src="img/6d2e06baceaf103f.png"></p>
+<p class="image-container"><img style="width: 584.00px" src="img/41bdd0df369d8c73.png"></p>
+<p>ここでは、商談の「フェーズ」項目が「受注」となったレコードに対する処理とするため、「IF/Else Block」を選択します。</p>
+<p>IF/Elseでは、複数のAND/OR条件を指定しフローを実行したり、IF - then - elseといった形で複数の条件による処理の分岐を行うことが出来ます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/d616daffd24843d0.png"></p>
+<p>Fieldとして「フェーズ」を選択します。</p>
+<p>この時、どのステップもしくはトリガーで取得されたデータを利用するかが分かるようになっており、ここでは、１番のTriggerで取得された「フェーズ」ということになります。もし、トリガー設定で利用する項目を選択しなかった場合は、大量の項目が表示されることになります。</p>
+<p class="image-container"><img style="width: 387.00px" src="img/53373e51455c8521.png"></p>
+<p>Valueは、今回のように固定文字列の場合はそのまま入力しますが、</p>
+<p>比較対象としては他ステップで取得した値を利用したり、Custom Expression Editorを用いて動的に作成する値を用いることも出来ます。</p>
+<p>＊この Custom Expression Editorは、項目に対して値を設定する際にも利用できます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/66365cdc6fbc7b3d.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/86a1c186c10cd797.png"></p>
+<p>「<code>Closed Won</code>」と入力し、「＋」を押してステップを追加します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/53e9b77f3e26f287.png"></p>
+<p>Salesforceを再度選択します。</p>
+<p class="image-container"><img style="width: 595.00px" src="img/18492ebf329dc76a.png"></p>
+<p>今回は、変更されたレコードに対し変更をかけてみたいと思いますので、先程作成（使用）したのと同じ組織を選択します。</p>
+<p class="image-container"><img style="width: 587.00px" src="img/730ea8d4f54a372.png"></p>
+<p>Salesforceステップの場合は、下記の処理を利用することが出来ます。</p>
+<ul>
+<li>Create new record （レコードの新規作成）</li>
+<li>Update record（レコードの更新）</li>
+<li>Get record（レコードの値の取得）</li>
+<li>Create or update record（レコードの作成または更新。Upsert処理です。）</li>
+<li>Delete record（レコードの削除）</li>
+</ul>
+<p class="image-container"><img style="width: 624.00px" src="img/cf49eba7d3baf37b.png"></p>
+<p>ここでは、「Update record」を選択します。</p>
+<p>トリガーを設定したときと同様に「商談」を指定し、少し待ちます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ba7e8459dd0c40e9.png"></p>
+<p>トリガーで取得されているレコードの情報を更新しますので、トリガーで取得された商談IDを指定します。</p>
+<p class="image-container"><img style="width: 610.00px" src="img/38a711dc54ba406f.png"></p>
+<p>次に、「Add Fields」をクリックし、更新したい項目を選択します。ここでは「説明」項目を選択します。</p>
+<p class="image-container"><img style="width: 601.00px" src="img/d3abcf940611f82b.png"></p>
+<p>説明項目に、既存で入っている文字列に追加したものを設定してみますので、「Custom Expression」を選択します。</p>
+<p class="image-container"><img style="width: 538.00px" src="img/28fe00451abd4134.png"></p>
+<p>「Data」タブで、「説明」項目を選択すると、右側作業ペインに<img style="width: 87.00px" src="img/2b1f1f7f1aaf6f2d.png">が追加されます。また、「Functions」タブにある関数を利用した本日日付と文字列を追加します。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ad1dbf5ca26b4df7.png"></p>
+<p>右上「Save」を押して、フローを保存してください。</p>
+<p class="image-container"><img style="width: 406.00px" src="img/43d9b60c5bb434f8.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="テスト" duration="0">
+        <h2 is-upgraded>１．テスト実行します。</h2>
+<p>右上「テスト」を押してください。</p>
+<p class="image-container"><img style="width: 407.00px" src="img/cb16215e967ff3c7.png"></p>
+<p>次のような表示になったらトリガー待機状態です。</p>
+<p class="image-container"><img style="width: 428.00px" src="img/634a5320f2fcec06.png"></p>
+<p>Salesforce側で一つ商談を選択し、フェーズを「受注」に変更してください。</p>
+<p>暫く待つと、テストが実行され、その後、Salesforce側のレコードを更新すると変更された値が表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/457e6e3653b7115c.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="有効化（Activation）" duration="0">
+        <h2 is-upgraded>１．フローの有効化</h2>
+<p>テストが完了したら、右上の「Activate」を押してフローを実行状態にします。</p>
+<p class="image-container"><img style="width: 405.00px" src="img/cc0e43b9ec257657.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="フロー一覧画面" duration="0">
+        <h2 is-upgraded>１．フロー一覧画面の表示</h2>
+<p>「Composer Flows」をクリックすると、フローの一覧画面が表示されます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/68f8f483e566b3c9.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="フロー実行履歴表示" duration="0">
+        <h2 is-upgraded>１．フロー実行履歴の表示</h2>
+<p>フローの名前をクリックすると、実行履歴が表示されます。</p>
+<p>また、この画面で、「View」をクリックすることで編集画面に移動することが出来ます。</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7128592d8921e86f.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="参考リソース" duration="0">
+        <h2 is-upgraded>製品ドキュメント</h2>
+<ul>
+<li><a href="https://docs.mulesoft.com/composer/ms_composer_overview" target="_blank">MuleSoft Composer | MuleSoft Documentation</a></li>
+</ul>
+<h2 is-upgraded>TrainHead</h2>
+<ul>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/trails/get-started-with-mulesoft-composer" target="_blank">Get Started with MuleSoft Composer | Salesforce Trailhead</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/data-sync-between-orgs-with-mulesoft-composer" target="_blank">複数Org同期</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/workday-data-sync-with-mulesoft-composer" target="_blank">Workday</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/twilio-data-sync-with-mulesoft-composer" target="_blank">Twilio</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/tableau-data-sync-with-mulesoft-composer" target="_blank">Tableau</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/stripe-data-sync-with-mulesoft-composer" target="_blank">Stripe</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/slack-data-sync-with-mulesoft-composer" target="_blank">Slack</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/netsuite-data-sync-with-mulesoft-composer" target="_blank">NetSuite</a>、<a href="https://trailhead.salesforce.com/en/content/learn/modules/account-to-customer-data-sync-with-mulesoft-composer" target="_blank">別ユースケースアカウント</a>、<a href="https://trailhead.salesforce.com/en/content/learn/modules/inventory-item-to-product-data-sync-with-mulesoft-composer" target="_blank">在庫</a>、<a href="https://trailhead.salesforce.com/en/content/learn/modules/product-to-inventory-and-assembly-item-data-sync-with-mulesoft-composer" target="_blank">在庫・生産</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/jira-data-sync-with-mulesoft-composer" target="_blank">Jira</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/asana-data-sync-with-mulesoft-composer" target="_blank">Asana</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/service-case-management-with-mulesoft-composer" target="_blank">ServiceNow</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/microsoft-teams-data-sync-with-mulesoft-composer" target="_blank">MS Teams</a></li>
+<li><a href="https://trailhead.salesforce.com/en/content/learn/modules/google-sheets-data-sync-with-mulesoft-composer" target="_blank">Google Sheet</a></li>
+</ul>
+<h2 is-upgraded>トレーニング</h2>
+<ul>
+<li><a href="https://training.mulesoft.com/library/mulesoft-composer-basics" target="_blank">MuleSoft Composer Basics</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
